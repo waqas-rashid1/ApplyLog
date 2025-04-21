@@ -23,3 +23,6 @@ def homepage(request):
 
 def aboutUs(request):
     return render(request, 'basics/aboutUs.html')
+
+def contact(request):
+    return render(request, 'basics/contact.html')
