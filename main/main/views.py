@@ -20,3 +20,6 @@ def register(request):
 
 def homepage(request):
     return render(request, 'basics/home.html')
+
+def aboutUs(request):
+    return render(request, 'basics/aboutUs.html')
