@@ -1,0 +1,179 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block content %}
+
+<section
+  class="d-flex align-items-center justify-content-center bg-gradient text-white"
+  style="
+    height: 100vh;
+    background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+  "
+>
+  <div class="text-center">
+    <h1 class="display-3 fw-bold mb-4">
+      Welcome to <span class="text-warning">ApplyLog</span>
+    </h1>
+    <p class="lead mb-4">
+      Your personal job hunt tracker – stay organized, stay focused, land
+      faster.
+    </p>
+    {% comment %}
+    <a href="{% url 'add_application' %}" class="btn btn-warning btn-lg shadow"
+      >Get Started</a
+    >
+    {% endcomment %}
+    <a href="" class="btn btn-warning btn-lg shadow">Get Started</a>
+  </div>
+</section>
+
+<!-- About Section -->
+<section class="bg-dark text-white py-5" style="min-height: 100vh">
+  <div
+    class="container d-flex flex-column flex-lg-row align-items-center justify-content-between gap-5"
+  >
+    <div class="col-lg-6">
+      <img
+        src="{% static 'images/about.svg' %}"
+        alt="About ApplyLog"
+        class="img-fluid rounded shadow"
+      />
+    </div>
+    <div class="col-lg-5">
+      <h2 class="fw-bold mb-4">What is ApplyLog?</h2>
+      <p class="lead">
+        ApplyLog is a modern web app to manage your job applications with ease.
+        Whether you apply through LinkedIn, Indeed, company portals, or
+        referrals — keep everything tracked in one clean, simple space.
+      </p>
+      <ul class="list-unstyled mt-4">
+        <li class="mb-2">
+          <i class="bi bi-check-circle-fill text-warning me-2"></i> Organize all
+          job applications in one place
+        </li>
+        <li class="mb-2">
+          <i class="bi bi-check-circle-fill text-warning me-2"></i> Update
+          progress & track your journey
+        </li>
+        <li class="mb-2">
+          <i class="bi bi-check-circle-fill text-warning me-2"></i> Visual
+          insights and performance metrics
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section
+  class="text-white d-flex align-items-center"
+  style="min-height: 100vh; background-color: #121212"
+>
+  <div class="container">
+    <h2 class="text-center fw-bold mb-5 display-5">Features You'll Love</h2>
+    <div class="row g-5">
+      <div class="col-md-4">
+        <div
+          class="p-4 rounded-4 shadow-lg bg-dark bg-opacity-75 text-center h-100"
+        >
+          <i class="bi bi-pencil-square display-3 text-warning mb-3"></i>
+          <h5 class="fw-semibold mt-3 mb-3">Log Applications</h5>
+          <p class="text-light">
+            Store role, company, platform, apply date — all in a few clicks.
+            Keep your job hunt organized, always.
+          </p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div
+          class="p-4 rounded-4 shadow-lg bg-dark bg-opacity-75 text-center h-100"
+        >
+          <i class="bi bi-kanban-fill display-3 text-warning mb-3"></i>
+          <h5 class="fw-semibold mt-3 mb-3">Track Progress</h5>
+          <p class="text-light">
+            Easily move jobs from Applied to Interview, Rejected, or Offer. Your
+            journey, clearly visible.
+          </p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div
+          class="p-4 rounded-4 shadow-lg bg-dark bg-opacity-75 text-center h-100"
+        >
+          <i class="bi bi-bar-chart-line-fill display-3 text-warning mb-3"></i>
+          <h5 class="fw-semibold mt-3 mb-3">Insights & Analytics</h5>
+          <p class="text-light">
+            Understand patterns, optimize your search, and measure success with
+            beautiful charts and stats.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works Section -->
+<section
+  class="text-white d-flex align-items-center"
+  style="min-height: 100vh; background-color: #121212"
+>
+  <div class="container">
+    <h2 class="text-center fw-bold mb-5 display-5">How It Works</h2>
+    <div class="row g-4">
+      <div class="col-md-3">
+        <div
+          class="p-4 rounded-4 border border-warning text-center bg-dark bg-opacity-75 h-100"
+        >
+          <div class="mb-3">
+            <span class="badge bg-warning fs-4 px-3 py-2">1</span>
+          </div>
+          <h6 class="fw-semibold">Create Account</h6>
+          <p class="text-light small">
+            Sign up in seconds and unlock your personal job tracking dashboard.
+          </p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div
+          class="p-4 rounded-4 border border-warning text-center bg-dark bg-opacity-75 h-100"
+        >
+          <div class="mb-3">
+            <span class="badge bg-warning fs-4 px-3 py-2">2</span>
+          </div>
+          <h6 class="fw-semibold">Log Jobs</h6>
+          <p class="text-light small">
+            Save jobs from any platform. Include title, company, and source.
+          </p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div
+          class="p-4 rounded-4 border border-warning text-center bg-dark bg-opacity-75 h-100"
+        >
+          <div class="mb-3">
+            <span class="badge bg-warning fs-4 px-3 py-2">3</span>
+          </div>
+          <h6 class="fw-semibold">Track Status</h6>
+          <p class="text-light small">
+            Update application status as you hear back. Stay on top of
+            everything.
+          </p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div
+          class="p-4 rounded-4 border border-warning text-center bg-dark bg-opacity-75 h-100"
+        >
+          <div class="mb-3">
+            <span class="badge bg-warning fs-4 px-3 py-2">4</span>
+          </div>
+          <h6 class="fw-semibold">Review Stats</h6>
+          <p class="text-light small">
+            Check visual insights and metrics to improve your application game.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

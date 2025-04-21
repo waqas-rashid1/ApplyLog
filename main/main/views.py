@@ -19,4 +19,4 @@ def register(request):
     return render(request, 'registration/register.html', {'form': form})
 
 def homepage(request):
-    return render(request, 'base.html')
+    return render(request, 'basics/home.html')
