@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <title>UserAuth | Home</title>
+</head>
+<body>
+    <!-- Navbar section (same for all pages) -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand fw-bold" href="#">UserAuth</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                  aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'homepage'%}">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">About</a>
+              </li>
+            </ul>
+            {% if user.is_authenticated %}
+            <form method="post" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-danger m-2">Logout</button>
+          </form>
+            {% else %}
+              <a class="btn btn-outline-danger m-2" href="{% url 'login' %}">Login</a>
+              <a class="btn btn-outline-primary" href="{% url 'register' %}">Register</a>
+            {% endif %}
+          </div>
+        </div>
+    </nav>
+
+    <!-- Main content section that will be replaced in other templates -->
+    {% block content %}
+    <!-- Default content that appears in base.html -->
+    <div class="container py-5 text-center">
+        <h1 class="display-4 fw-bold">Welcome to UserAuth 🔐</h1>
+        <p class="lead mt-3">A simple Django authentication system with login, register, and logout functionality.</p>
+        
+        {% if user.is_authenticated %}
+          <div class="alert alert-success mt-4" role="alert">
+            Hello, <strong>{{ user.username }}</strong>! You are logged in.
+          </div>
+        {% else %}
+          <div class="alert alert-info mt-4" role="alert">
+            You are not logged in. Please <a href="{% url 'login' %}">Login</a> or <a href="{% url 'register' %}">Register</a> to get started.
+          </div>
+        {% endif %}
+    </div>
+    {% endblock %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-qX6qeKkUO0sJzZl6Dd6Kl8N6rRvZz2+jtdZUJbcQ+8KSc4Ot+1gdr0XDmzfdEibn"
+            crossorigin="anonymous"></script>
+</body>
+</html>
