@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Header Section -->
+<section class="d-flex align-items-center justify-content-center text-white" style="height: 100vh; background: linear-gradient(135deg, #0f0f0f, #1e1e1e, #2a2a2a);">
+  <div class="text-center">
+    <h1 class="display-4 fw-bold" style="color: #ffca2c;">Dashboard</h1>
+    <p class="lead text-light">Track, analyze and manage your application progress at a glance</p>
+  </div>
+</section>
+
+<!-- Stats + Charts Section -->
+<section class="py-5 px-4" style="min-height: 100vh; background-color: #121212;">
+  <div class="container text-light">
+
+    <!-- Quick KPIs -->
+    <div class="row text-center mb-5">
+      <div class="col-md-3 mb-3">
+        <div class="p-4 bg-dark rounded-3 shadow-sm">
+          <h5>Total Applications</h5>
+          <h2 style="color: #ffc107;">50</h2>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="p-4 bg-dark rounded-3 shadow-sm">
+          <h5>Pending</h5>
+          <h2 style="color: #0dcaf0;">12</h2>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="p-4 bg-dark rounded-3 shadow-sm">
+          <h5>Accepted</h5>
+          <h2 style="color: #198754;">8</h2>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="p-4 bg-dark rounded-3 shadow-sm">
+          <h5>Rejected</h5>
+          <h2 style="color: #dc3545;">30</h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="row mb-5">
+      <div class="col-md-6 mb-4">
+        <div class="bg-dark p-4 rounded-3 shadow-sm">
+          <h5 class="text-center">Status Distribution</h5>
+          <canvas id="pieChart" height="200"></canvas>
+        </div>
+      </div>
+      <div class="col-md-6 mb-4">
+        <div class="bg-dark p-4 rounded-3 shadow-sm">
+          <h5 class="text-center">Monthly Applications</h5>
+          <canvas id="lineChart" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Insights -->
+    <div class="row mb-5">
+      <div class="col">
+        <div class="bg-dark p-4 rounded-3 shadow-sm">
+          <h5>Quick Insights</h5>
+          <ul class="list-group list-group-flush text-light">
+            <li class="list-group-item bg-dark border-secondary">🔥 Most active month: <strong>March</strong></li>
+            <li class="list-group-item bg-dark border-secondary">⏳ Average response time: <strong>3.5 days</strong></li>
+            <li class="list-group-item bg-dark border-secondary">✅ Highest success rate in: <strong>Remote Roles</strong></li>
+            <li class="list-group-item bg-dark border-secondary">🎯 Goal completion: <strong>65%</strong></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Applications -->
+    <div class="row">
+      <div class="col">
+        <div class="bg-dark p-4 rounded-3 shadow-sm">
+          <h5>Recent Applications</h5>
+          <table class="table table-dark table-bordered table-hover mt-3">
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th>Position</th>
+                <th>Status</th>
+                <th>Applied On</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Google</td>
+                <td>Software Engineer</td>
+                <td><span class="badge bg-warning">Pending</span></td>
+                <td>2025-04-01</td>
+              </tr>
+              <tr>
+                <td>Amazon</td>
+                <td>DevOps Engineer</td>
+                <td><span class="badge bg-success">Accepted</span></td>
+                <td>2025-03-20</td>
+              </tr>
+              <tr>
+                <td>Meta</td>
+                <td>Backend Developer</td>
+                <td><span class="badge bg-danger">Rejected</span></td>
+                <td>2025-03-15</td>
+              </tr>
+              <tr>
+                <td>Microsoft</td>
+                <td>Data Scientist</td>
+                <td><span class="badge bg-info">Interviewed</span></td>
+                <td>2025-03-05</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Charts Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const pieCtx = document.getElementById('pieChart').getContext('2d');
+  const lineCtx = document.getElementById('lineChart').getContext('2d');
+
+  new Chart(pieCtx, {
+    type: 'pie',
+    data: {
+      labels: ['Pending', 'Accepted', 'Rejected', 'Interviewed'],
+      datasets: [{
+        data: [12, 8, 30, 5],
+        backgroundColor: ['#ffc107', '#198754', '#dc3545', '#0dcaf0'],
+        borderColor: '#111',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      plugins: {
+        legend: { labels: { color: 'white' } }
+      }
+    }
+  });
+
+  new Chart(lineCtx, {
+    type: 'line',
+    data: {
+      labels: ['Jan', 'Feb', 'Mar', 'Apr'],
+      datasets: [{
+        label: 'Applications Sent',
+        data: [5, 12, 20, 13],
+        borderColor: '#ffc107',
+        backgroundColor: 'rgba(255,193,7,0.2)',
+        tension: 0.3,
+        fill: true
+      }]
+    },
+    options: {
+      scales: {
+        x: { ticks: { color: 'white' } },
+        y: { ticks: { color: 'white' } }
+      },
+      plugins: {
+        legend: { labels: { color: 'white' } }
+      }
+    }
+  });
+</script>
+
+{% endblock %}

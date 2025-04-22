@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Header Section -->
+<section class="d-flex align-items-center justify-content-center text-white" style="height: 100vh; background: linear-gradient(135deg, #0f0f0f, #1e1e1e);">
+  <div class="text-center">
+    <h1 class="display-4 fw-bold" style="color: #ffca2c;">Application Insights</h1>
+    <p class="lead">Beyond the numbers — discover behaviors, patterns & journeys.</p>
+  </div>
+</section>
+
+<!-- Funnel Journey Section -->
+<section class="py-5 px-4" style="min-height: 100vh; background-color: #121212;">
+  <div class="container text-light">
+    <h3 class="mb-4">🚀 Application Journey</h3>
+    <div class="d-flex flex-wrap justify-content-between text-center">
+      {% for step in funnel_steps %}
+        <div class="flex-fill bg-dark p-4 m-2 rounded-3 shadow-sm">
+          <h5>{{ step }}</h5>
+          <p class="display-6" style="color: #0dcaf0;">{{ forloop.counter0|add:"10" }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Behavior Trends Section -->
+<section class="py-5 px-4" style="min-height: 100vh; background-color: #181818;">
+  <div class="container text-light">
+    <h3 class="mb-4">📊 Behavioral Insights</h3>
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="bg-dark p-4 rounded-3 shadow-sm">
+          <h5>💔 Most Common Drop-off</h5>
+          <p class="fs-4 text-danger">Interviewed → Offered</p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="bg-dark p-4 rounded-3 shadow-sm">
+          <h5>⏱️ Avg Time in Each Stage</h5>
+          <p class="fs-4">3.2 Days</p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="bg-dark p-4 rounded-3 shadow-sm">
+          <h5>📥 Most Used Method</h5>
+          <p class="fs-4">Referrals (42%)</p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="bg-dark p-4 rounded-3 shadow-sm">
+          <h5>🌙 Most Active Time</h5>
+          <p class="fs-4">10 PM – 12 AM</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Candidate Personas Section -->
+<section class="py-5 px-4" style="min-height: 100vh; background-color: #111;">
+  <div class="container text-light">
+    <h3 class="mb-4">🧠 Candidate Personas</h3>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="bg-dark p-4 rounded-3 shadow-sm">
+          <h5>💼 The Referral Rockstar</h5>
+          <p>Applies via referral, high success rate, quick movement through stages.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="bg-dark p-4 rounded-3 shadow-sm">
+          <h5>🌙 The Late-Night Coder</h5>
+          <p>Most active at night, consistent application pattern, strong tech focus.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="bg-dark p-4 rounded-3 shadow-sm">
+          <h5>🚀 The Serial Applier</h5>
+          <p>Sends many applications, wide range of roles, lower follow-up rate.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

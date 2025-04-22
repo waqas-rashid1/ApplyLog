@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Header Section with 100% Height and Dark Gradient -->
+<section class="d-flex align-items-center justify-content-center text-white" style="
+  height: 100vh;
+  background: linear-gradient(135deg, #0f0f0f, #1e1e1e, #2a2a2a);
+">
+  <div class="text-center">
+    <h1 class="display-4 fw-bold" style="color: #ffca2c;">Add Application</h1>
+    <p class="lead text-light">Fill out the form below to apply for your desired position.</p>
+  </div>
+</section>
+
+<!-- Main Content Section -->
+<section class="py-5" style="background-color: #2a2a2a; min-height: 100vh;">
+  <div class="container">
+    <div class="card shadow-lg border-0 rounded-4 p-4" style="background-color: #333; color: white;">
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Applicant Name Field -->
+        <div class="row mb-3">
+          <div class="col-md-4 d-flex align-items-center">
+            <label for="id_applicant_name" class="form-label text-white fw-semibold">Applicant Name</label>
+          </div>
+          <div class="col-md-8">
+            <input type="text" name="applicant_name" id="id_applicant_name" class="form-control" placeholder="Enter your full name" value="{{ form.applicant_name.value }}" style="background-color: #444; color: white;">
+          </div>
+        </div>
+
+        <!-- Email Field -->
+        <div class="row mb-3">
+          <div class="col-md-4 d-flex align-items-center">
+            <label for="id_email" class="form-label text-white fw-semibold">Email</label>
+          </div>
+          <div class="col-md-8">
+            <input type="email" name="email" id="id_email" class="form-control" placeholder="Enter your email" value="{{ form.email.value }}" style="background-color: #444; color: white;">
+          </div>
+        </div>
+
+        <!-- Phone Field -->
+        <div class="row mb-3">
+          <div class="col-md-4 d-flex align-items-center">
+            <label for="id_phone" class="form-label text-white fw-semibold">Phone</label>
+          </div>
+          <div class="col-md-8">
+            <input type="text" name="phone" id="id_phone" class="form-control" placeholder="Enter your phone number" value="{{ form.phone.value }}" style="background-color: #444; color: white;">
+          </div>
+        </div>
+
+        <!-- Position Applied Field -->
+        <div class="row mb-3">
+          <div class="col-md-4 d-flex align-items-center">
+            <label for="id_position_applied" class="form-label text-white fw-semibold">Position Applied</label>
+          </div>
+          <div class="col-md-8">
+            <input type="text" name="position_applied" id="id_position_applied" class="form-control" placeholder="Position you're applying for" value="{{ form.position_applied.value }}" style="background-color: #444; color: white;">
+          </div>
+        </div>
+
+        <!-- Company Name Field -->
+        <div class="row mb-3">
+          <div class="col-md-4 d-flex align-items-center">
+            <label for="id_company_name" class="form-label text-white fw-semibold">Company Name</label>
+          </div>
+          <div class="col-md-8">
+            <input type="text" name="company_name" id="id_company_name" class="form-control" placeholder="Enter the company's name" value="{{ form.company_name.value }}" style="background-color: #444; color: white;">
+          </div>
+        </div>
+
+        <!-- Application Date Field -->
+        <div class="row mb-3">
+          <div class="col-md-4 d-flex align-items-center">
+            <label for="id_application_date" class="form-label text-white fw-semibold">Application Date</label>
+          </div>
+          <div class="col-md-8">
+            <input type="date" name="application_date" id="id_application_date" class="form-control" value="{{ form.application_date.value }}" style="background-color: #444; color: white;">
+          </div>
+        </div>
+
+        <!-- Resume Field -->
+        <div class="row mb-3">
+          <div class="col-md-4 d-flex align-items-center">
+            <label for="id_resume" class="form-label text-white fw-semibold">Resume</label>
+          </div>
+          <div class="col-md-8">
+            <input type="file" name="resume" id="id_resume" class="form-control" style="background-color: #444; color: white;">
+          </div>
+        </div>
+
+        <!-- Status Field -->
+        <div class="row mb-3">
+          <div class="col-md-4 d-flex align-items-center">
+            <label for="id_status" class="form-label text-white fw-semibold">Status</label>
+          </div>
+          <div class="col-md-8">
+            <input type="text" name="status" id="id_status" class="form-control" placeholder="Application status" value="{{ form.status.value }}" style="background-color: #444; color: white;">
+          </div>
+        </div>
+
+        <!-- Cover Letter Field -->
+        <div class="row mb-3">
+          <div class="col-md-4 d-flex align-items-center">
+            <label for="id_cover_letter" class="form-label text-white fw-semibold">Cover Letter</label>
+          </div>
+          <div class="col-md-8">
+            <textarea name="cover_letter" id="id_cover_letter" class="form-control" rows="4" placeholder="Enter your cover letter" style="background-color: #444; color: white;">{{ form.cover_letter.value }}</textarea>
+          </div>
+        </div>
+
+        <!-- Additional Notes Field -->
+        <div class="row mb-4">
+          <div class="col-md-4 d-flex align-items-center">
+            <label for="id_notes" class="form-label text-white fw-semibold">Additional Notes</label>
+          </div>
+          <div class="col-md-8">
+            <textarea name="notes" id="id_notes" class="form-control" rows="4" placeholder="Enter any additional notes" style="background-color: #444; color: white;">{{ form.notes.value }}</textarea>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary px-5 py-2">Submit Application</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
