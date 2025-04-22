@@ -17,7 +17,7 @@
 <section class="py-5" style="background-color: #2a2a2a; min-height: 100vh;">
   <div class="container">
     <div class="card shadow-lg border-0 rounded-4 p-4" style="background-color: #333; color: white;">
-      <form method="POST" enctype="multipart/form-data">
+      <form method="POST" enctype="multipart/form-data" action="{% url 'submit_application' %}">
         {% csrf_token %}
 
         <!-- Applicant Name Field -->
@@ -26,7 +26,7 @@
             <label for="id_applicant_name" class="form-label text-white fw-semibold">Applicant Name</label>
           </div>
           <div class="col-md-8">
-            <input type="text" name="applicant_name" id="id_applicant_name" class="form-control" placeholder="Enter your full name" value="{{ form.applicant_name.value }}" style="background-color: #444; color: white;">
+            <input type="text" name="applicant_name" id="id_applicant_name" class="form-control" placeholder="Enter your full name" value="{{ form.applicant_name.value }}" style="background-color: #444; color: white;" required>
           </div>
         </div>
 
@@ -76,7 +76,7 @@
             <label for="id_application_date" class="form-label text-white fw-semibold">Application Date</label>
           </div>
           <div class="col-md-8">
-            <input type="date" name="application_date" id="id_application_date" class="form-control" value="{{ form.application_date.value }}" style="background-color: #444; color: white;">
+            <input type="date" name="date_applied" id="id_application_date" class="form-control" style="background-color: #444; color: white;" value="{{ form.application_date.value|default:today_date }}" ...> 
           </div>
         </div>
 
@@ -96,10 +96,15 @@
             <label for="id_status" class="form-label text-white fw-semibold">Status</label>
           </div>
           <div class="col-md-8">
-            <input type="text" name="status" id="id_status" class="form-control" placeholder="Application status" value="{{ form.status.value }}" style="background-color: #444; color: white;">
+            <select name="status" id="id_status" class="form-select" style="background-color: #444; color: white; border: 1px solid #666;">
+              {% comment %} <option disabled selected>Select current status</option> {% endcomment %}
+              {% for value, label in form.status.field.choices %}
+                <option value="{{ value }}" {% if form.status.value == value %}selected{% endif %} style="background-color: #444; color: white;">{{ label }}</option>
+              {% endfor %}
+            </select>
           </div>
         </div>
-
+        
         <!-- Cover Letter Field -->
         <div class="row mb-3">
           <div class="col-md-4 d-flex align-items-center">
@@ -130,3 +135,12 @@
 </section>
 
 {% endblock %}
+
+<style>
+  /* Style for hover and focus states */
+  #id_status:hover, #id_status:focus {
+    background-color: #555;  /* Slightly lighter when hovered or focused */
+    color: white;
+    border-color: #888;
+  }
+</style>

@@ -3,19 +3,16 @@ from .forms import ApplicationForm
 from django.contrib import messages
 from django.db.models import Q
 from .models import Application
+from datetime import date
 
 def add_application(request):
+    form = ApplicationForm()
     if request.method == 'POST':
-        form = ApplicationForm(request.POST)
+        form = ApplicationForm(request.POST, request.FILES)
         if form.is_valid():
-            app = form.save(commit=False)
-            app.user = request.user
-            app.save()
-            messages.success(request, 'Application added successfully!')
-            return redirect('dashboard')  # or any other page
-    else:
-        form = ApplicationForm()
-    return render(request, 'add_application.html', {'form': form})
+            form.save()
+            return redirect('application_success')  # Define this view/template
+    return render(request, 'add_application.html', {'form': form, 'today_date': date.today().isoformat()})
 
 def application_history(request):
     # Get search query and filter value from GET request
@@ -77,3 +74,18 @@ def dashboard(request):
         'recent_apps': applications[:5],  # latest 5 entries
     }
     return render(request, 'dashboard.html', context)
+
+def submit_application(request):
+    if request.method == 'POST':
+        form = ApplicationForm(request.POST)
+        if form.is_valid():
+            form.save()  # Save the form data to the database
+            return redirect('dashboard')  # Redirect after successful submission
+    else:
+        form = ApplicationForm()
+    
+    context = {
+        'form': form,
+        'today_date': date.today().isoformat(), 
+    }
+    return render(request, 'add_application.html', context)

@@ -9,7 +9,7 @@ class ApplicationForm(forms.ModelForm):
         fields = '__all__'
         widgets = {
             'application_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
-            'status': forms.Select(attrs={'class': 'form-select'}),
+            'status': forms.Select(choices=Application.STATUS_CHOICES, attrs={'class': 'form-select'}),
             'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'cover_letter': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
             'applicant_name': forms.TextInput(attrs={'class': 'form-control'}),
