@@ -92,6 +92,15 @@
       .form-control::placeholder {
         color: #bbb;
       }
+      .btn-primary {
+        background-color: #ffca2c;
+        border-color: #ffca2c;
+        color: #000;
+      }
+      .btn-primary:hover {
+        background-color: #e6b423;
+        border-color: #e6b423;
+      }
     </style>
   </head>
   <body>
@@ -114,7 +123,7 @@
           style="font-family: 'Poppins', sans-serif"
           href="{% url 'homepage' %}"
         >
-          <i class="bi bi-clipboard2-check-fill text-primary me-2"></i>ApplyLog
+          <i class="bi bi-clipboard2-check-fill text-warning me-2"></i>ApplyLog
         </a>
         <button
           class="navbar-toggler text-white border-0"
