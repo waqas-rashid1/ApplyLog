@@ -3,87 +3,130 @@
 
 {% block content %}
 
-<!-- Header Section -->
-<section class="d-flex align-items-center justify-content-center text-white" style="height: 100vh; background: linear-gradient(135deg, #0f0f0f, #1e1e1e);">
+<!-- Header Section (Fullscreen) -->
+<section class="d-flex align-items-center justify-content-center text-white" style="height: 100vh; background: linear-gradient(135deg, #0f0f0f, #1e1e1e, #2a2a2a);">
   <div class="text-center">
-    <h1 class="display-4 fw-bold" style="color: #ffca2c;">Application Insights</h1>
-    <p class="lead">Beyond the numbers — discover behaviors, patterns & journeys.</p>
+    <h1 class="display-4 fw-bold" style="color: #ffca2c;">Application Stats</h1>
+    <p class="lead text-light">Insights that matter – all in one glance.</p>
   </div>
 </section>
 
-<!-- Funnel Journey Section -->
+<!-- Stats + Charts Section -->
 <section class="py-5 px-4" style="min-height: 100vh; background-color: #121212;">
   <div class="container text-light">
-    <h3 class="mb-4">🚀 Application Journey</h3>
-    <div class="d-flex flex-wrap justify-content-between text-center">
-      {% for step in funnel_steps %}
-        <div class="flex-fill bg-dark p-4 m-2 rounded-3 shadow-sm">
-          <h5>{{ step }}</h5>
-          <p class="display-6" style="color: #0dcaf0;">{{ forloop.counter0|add:"10" }}</p>
+
+    <!-- KPI Counters -->
+    <div class="row text-center mb-5">
+      <div class="col-md-3 mb-3">
+        <div class="p-4 bg-dark rounded-3 shadow-sm">
+          <h5>Total Applications</h5>
+          <h2 style="color: #ffc107;">{{ total }}</h2>
         </div>
-      {% endfor %}
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="p-4 bg-dark rounded-3 shadow-sm">
+          <h5>Pending</h5>
+          <h2 style="color: #ffc107;">{{ pending }}</h2>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="p-4 bg-dark rounded-3 shadow-sm">
+          <h5>Accepted</h5>
+          <h2 style="color: #198754;">{{ accepted }}</h2>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="p-4 bg-dark rounded-3 shadow-sm">
+          <h5>Rejected</h5>
+          <h2 style="color: #dc3545;">{{ rejected }}</h2>
+        </div>
+      </div>
     </div>
+
+    <!-- Chart Visuals -->
+    <div class="row mb-5">
+      <div class="col-md-6 mb-4">
+        <div class="bg-dark p-4 rounded-3 shadow-sm">
+          <h5 class="text-center">Application Status Pie</h5>
+          <canvas id="statusPieChart" height="200"></canvas>
+        </div>
+      </div>
+      <div class="col-md-6 mb-4">
+        <div class="bg-dark p-4 rounded-3 shadow-sm">
+          <h5 class="text-center">Monthly Application Trend</h5>
+          <canvas id="barChart" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Insights -->
+    <div class="row mb-3">
+      <div class="col">
+        <div class="bg-dark p-4 rounded-3 shadow-sm">
+          <h5>Application Highlights</h5>
+          <ul class="list-group list-group-flush text-light">
+            <li class="list-group-item bg-dark border-secondary">📈 Most active month: <strong>April</strong></li>
+            <li class="list-group-item bg-dark border-secondary">🎯 Best acceptance rate in: <strong>Product Management</strong></li>
+            <li class="list-group-item bg-dark border-secondary">💡 Interviews most scheduled: <strong>Wednesdays</strong></li>
+            <li class="list-group-item bg-dark border-secondary">⌛ Avg response time: <strong>4.2 days</strong></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
-<!-- Behavior Trends Section -->
-<section class="py-5 px-4" style="min-height: 100vh; background-color: #181818;">
-  <div class="container text-light">
-    <h3 class="mb-4">📊 Behavioral Insights</h3>
-    <div class="row g-4">
-      <div class="col-md-6">
-        <div class="bg-dark p-4 rounded-3 shadow-sm">
-          <h5>💔 Most Common Drop-off</h5>
-          <p class="fs-4 text-danger">Interviewed → Offered</p>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="bg-dark p-4 rounded-3 shadow-sm">
-          <h5>⏱️ Avg Time in Each Stage</h5>
-          <p class="fs-4">3.2 Days</p>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="bg-dark p-4 rounded-3 shadow-sm">
-          <h5>📥 Most Used Method</h5>
-          <p class="fs-4">Referrals (42%)</p>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="bg-dark p-4 rounded-3 shadow-sm">
-          <h5>🌙 Most Active Time</h5>
-          <p class="fs-4">10 PM – 12 AM</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- Candidate Personas Section -->
-<section class="py-5 px-4" style="min-height: 100vh; background-color: #111;">
-  <div class="container text-light">
-    <h3 class="mb-4">🧠 Candidate Personas</h3>
-    <div class="row g-4">
-      <div class="col-md-4">
-        <div class="bg-dark p-4 rounded-3 shadow-sm">
-          <h5>💼 The Referral Rockstar</h5>
-          <p>Applies via referral, high success rate, quick movement through stages.</p>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="bg-dark p-4 rounded-3 shadow-sm">
-          <h5>🌙 The Late-Night Coder</h5>
-          <p>Most active at night, consistent application pattern, strong tech focus.</p>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="bg-dark p-4 rounded-3 shadow-sm">
-          <h5>🚀 The Serial Applier</h5>
-          <p>Sends many applications, wide range of roles, lower follow-up rate.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+<!-- Chart Script -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Pie Chart
+    const pieCtx = document.getElementById('statusPieChart').getContext('2d');
+    new Chart(pieCtx, {
+      type: 'pie',
+      data: {
+        labels: ['Pending', 'Interviewed', 'Accepted', 'Rejected'],
+        datasets: [{
+          label: 'Status Overview',
+          data: [{{ pending }}, {{ interviewed }}, {{ accepted }}, {{ rejected }}],
+          backgroundColor: ['#ffc107', '#0dcaf0', '#198754', '#dc3545'],
+          borderColor: '#111',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        plugins: {
+          legend: { labels: { color: 'white' } }
+        }
+      }
+    });
+
+    // Bar Chart
+    const barCtx = document.getElementById('barChart').getContext('2d');
+    new Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr'],
+        datasets: [{
+          label: 'Applications',
+          data: [4, 8, 15, 22],
+          backgroundColor: '#0dcaf0'
+        }]
+      },
+      options: {
+        scales: {
+          x: { ticks: { color: 'white' } },
+          y: { ticks: { color: 'white' }, beginAtZero: true }
+        },
+        plugins: {
+          legend: { labels: { color: 'white' } }
+        }
+      }
+    });
+  });
+</script>
 
 {% endblock %}

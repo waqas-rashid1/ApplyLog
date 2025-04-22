@@ -36,7 +36,7 @@
             <label for="id_email" class="form-label text-white fw-semibold">Email</label>
           </div>
           <div class="col-md-8">
-            <input type="email" name="email" id="id_email" class="form-control" placeholder="Enter your email" value="{{ form.email.value }}" style="background-color: #444; color: white;">
+            <input type="email" name="email" id="id_email" class="form-control" placeholder="Enter your email" value="{{ form.email.value }}" style="background-color: #444; color: white;" required>
           </div>
         </div>
 
@@ -46,7 +46,7 @@
             <label for="id_phone" class="form-label text-white fw-semibold">Phone</label>
           </div>
           <div class="col-md-8">
-            <input type="text" name="phone" id="id_phone" class="form-control" placeholder="Enter your phone number" value="{{ form.phone.value }}" style="background-color: #444; color: white;">
+            <input type="text" name="phone" id="id_phone" class="form-control" placeholder="Enter your phone number" value="{{ form.phone.value }}" style="background-color: #444; color: white;" required>
           </div>
         </div>
 
@@ -56,7 +56,7 @@
             <label for="id_position_applied" class="form-label text-white fw-semibold">Position Applied</label>
           </div>
           <div class="col-md-8">
-            <input type="text" name="position_applied" id="id_position_applied" class="form-control" placeholder="Position you're applying for" value="{{ form.position_applied.value }}" style="background-color: #444; color: white;">
+            <input type="text" name="position_applied" id="id_position_applied" class="form-control" placeholder="Position you're applying for" value="{{ form.position_applied.value }}" style="background-color: #444; color: white;" required>
           </div>
         </div>
 
@@ -66,9 +66,29 @@
             <label for="id_company_name" class="form-label text-white fw-semibold">Company Name</label>
           </div>
           <div class="col-md-8">
-            <input type="text" name="company_name" id="id_company_name" class="form-control" placeholder="Enter the company's name" value="{{ form.company_name.value }}" style="background-color: #444; color: white;">
+            <input type="text" name="company_name" id="id_company_name" class="form-control" placeholder="Enter the company's name" value="{{ form.company_name.value }}" style="background-color: #444; color: white;" required>
           </div>
         </div>
+
+        <!-- Website Link Field -->
+<div class="row mb-3">
+  <div class="col-md-4 d-flex align-items-center">
+    <label for="id_website_link" class="form-label text-white fw-semibold">Website Link</label>
+  </div>
+  <div class="col-md-8">
+    <input type="url" name="website_link" id="id_website_link" class="form-control" placeholder="Enter the job posting URL" value="{{ form.website_link.value }}" style="background-color: #444; color: white;">
+  </div>
+</div>
+
+<!-- Source Field -->
+<div class="row mb-3">
+  <div class="col-md-4 d-flex align-items-center">
+    <label for="id_source" class="form-label text-white fw-semibold">Job Source</label>
+  </div>
+  <div class="col-md-8">
+    <input type="text" name="source" id="id_source" class="form-control" placeholder="e.g., LinkedIn, Indeed" value="{{ form.source.value }}" style="background-color: #444; color: white;">
+  </div>
+</div>
 
         <!-- Application Date Field -->
         <div class="row mb-3">
@@ -76,7 +96,7 @@
             <label for="id_application_date" class="form-label text-white fw-semibold">Application Date</label>
           </div>
           <div class="col-md-8">
-            <input type="date" name="date_applied" id="id_application_date" class="form-control" style="background-color: #444; color: white;" value="{{ form.application_date.value|default:today_date }}" ...> 
+            <input type="date" name="date_applied" id="id_application_date" class="form-control" style="background-color: #444; color: white;" value="{{ form.application_date.value|default:today_date }}" ... required> 
           </div>
         </div>
 
@@ -96,7 +116,7 @@
             <label for="id_status" class="form-label text-white fw-semibold">Status</label>
           </div>
           <div class="col-md-8">
-            <select name="status" id="id_status" class="form-select" style="background-color: #444; color: white; border: 1px solid #666;">
+            <select name="status" id="id_status" class="form-select" style="background-color: #444; color: white; border: 1px solid #666;" required>
               {% comment %} <option disabled selected>Select current status</option> {% endcomment %}
               {% for value, label in form.status.field.choices %}
                 <option value="{{ value }}" {% if form.status.value == value %}selected{% endif %} style="background-color: #444; color: white;">{{ label }}</option>

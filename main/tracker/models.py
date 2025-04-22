@@ -4,12 +4,13 @@ from django.contrib.auth.models import User
 
 # Applicant Model
 class Applicant(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=255)
     email = models.EmailField()
     phone = models.CharField(max_length=15)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} - {self.email} - {self.phone}" 
 
 
 # Job Model
@@ -20,7 +21,7 @@ class Job(models.Model):
     source = models.CharField(max_length=255)  # From where the job was applied (e.g., LinkedIn, Indeed, etc.)
 
     def __str__(self):
-        return f"{self.title} at {self.company}"
+        return f"{self.title} at {self.company} ({self.source}) - {self.website_link})" 
 
 
 # Application Model

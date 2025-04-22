@@ -76,22 +76,6 @@ def dashboard(request):
     }
     return render(request, 'dashboard.html', context)
 
-# def submit_application(request):
-#     if request.method == 'POST':
-#         form = ApplicationForm(request.POST)
-#         if form.is_valid():
-#             form.save()  # Save the form data to the database
-#             return redirect('dashboard')  # Redirect after successful submission
-#     else:
-#         form = ApplicationForm()
-    
-#     context = {
-#         'form': form,
-#         'today_date': date.today().isoformat(), 
-#     }
-#     return render(request, 'add_application.html', context)
-
-
 def submit_application(request):
     if request.method == 'POST':
         name = request.POST.get('applicant_name')
@@ -120,7 +104,8 @@ def submit_application(request):
         job, _ = Job.objects.get_or_create(
             title=position,
             company=company,
-            defaults={'website_link': website_link, 'source': source},
+            website_link=website_link,
+            source=source
         )
 
         # 3. Create Application
