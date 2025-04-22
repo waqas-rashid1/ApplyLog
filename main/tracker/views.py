@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect
 from .forms import ApplicationForm
 from django.contrib import messages
 from django.db.models import Q
-from .models import Application
+from .models import Application, Applicant, Job
 from datetime import date
+from django.utils import timezone
 
 def add_application(request):
     form = ApplicationForm()
@@ -75,17 +76,64 @@ def dashboard(request):
     }
     return render(request, 'dashboard.html', context)
 
+# def submit_application(request):
+#     if request.method == 'POST':
+#         form = ApplicationForm(request.POST)
+#         if form.is_valid():
+#             form.save()  # Save the form data to the database
+#             return redirect('dashboard')  # Redirect after successful submission
+#     else:
+#         form = ApplicationForm()
+    
+#     context = {
+#         'form': form,
+#         'today_date': date.today().isoformat(), 
+#     }
+#     return render(request, 'add_application.html', context)
+
+
 def submit_application(request):
     if request.method == 'POST':
-        form = ApplicationForm(request.POST)
-        if form.is_valid():
-            form.save()  # Save the form data to the database
-            return redirect('dashboard')  # Redirect after successful submission
-    else:
-        form = ApplicationForm()
-    
-    context = {
-        'form': form,
-        'today_date': date.today().isoformat(), 
-    }
-    return render(request, 'add_application.html', context)
+        name = request.POST.get('applicant_name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+
+        position = request.POST.get('position_applied')
+        company = request.POST.get('company_name')
+        website_link = request.POST.get('website_link') or "https://example.com"  # fallback if not provided
+        source = request.POST.get('source') or "Not specified"
+
+        date_applied = request.POST.get('date_applied') or timezone.now().date()
+        status = request.POST.get('status')
+        notes = request.POST.get('notes')
+        cover_letter = request.POST.get('cover_letter')
+        resume = request.FILES.get('resume')
+
+        # 1. Get or create Applicant
+        applicant, _ = Applicant.objects.get_or_create(
+            name=name,
+            email=email,
+            phone=phone,
+        )
+
+        # 2. Get or create Job
+        job, _ = Job.objects.get_or_create(
+            title=position,
+            company=company,
+            defaults={'website_link': website_link, 'source': source},
+        )
+
+        # 3. Create Application
+        Application.objects.create(
+            applicant=applicant,
+            job=job,
+            date_applied=date_applied,
+            status=status,
+            notes=notes,
+            cover_letter=cover_letter,
+            resume=resume,
+        )
+
+        return redirect('dashboard')  # or wherever you want to redirect
+
+    return render(request, 'add_application.html')
