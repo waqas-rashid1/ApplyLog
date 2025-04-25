@@ -65,10 +65,18 @@
         <div class="bg-dark p-4 rounded-3 shadow-sm">
           <h5>Application Highlights</h5>
           <ul class="list-group list-group-flush text-light">
-            <li class="list-group-item bg-dark border-secondary">📈 Most active month: <strong>April</strong></li>
-            <li class="list-group-item bg-dark border-secondary">🎯 Best acceptance rate in: <strong>Product Management</strong></li>
-            <li class="list-group-item bg-dark border-secondary">💡 Interviews most scheduled: <strong>Wednesdays</strong></li>
-            <li class="list-group-item bg-dark border-secondary">⌛ Avg response time: <strong>4.2 days</strong></li>
+            <li class="list-group-item bg-dark border-secondary">
+              📈 Most active month: <strong>{{ most_active_month }}</strong>
+            </li>
+            <li class="list-group-item bg-dark border-secondary">
+              🎯 Best acceptance rate in: <strong>{{ best_acceptance_title }}</strong>
+            </li>
+            <li class="list-group-item bg-dark border-secondary">
+              💡 Interviews most scheduled: <strong>{{ interview_day }}</strong>
+            </li>
+            <li class="list-group-item bg-dark border-secondary">
+              ⌛ Avg response time: <strong>{{ avg_response_time }} days</strong>
+            </li>
           </ul>
         </div>
       </div>
@@ -81,7 +89,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <!-- Chart Script -->
-<script>
+{% comment %} <script>
   document.addEventListener("DOMContentLoaded", function () {
     // Pie Chart
     const pieCtx = document.getElementById('statusPieChart').getContext('2d');
@@ -113,6 +121,55 @@
         datasets: [{
           label: 'Applications',
           data: [4, 8, 15, 22],
+          backgroundColor: '#0dcaf0'
+        }]
+      },
+      options: {
+        scales: {
+          x: { ticks: { color: 'white' } },
+          y: { ticks: { color: 'white' }, beginAtZero: true }
+        },
+        plugins: {
+          legend: { labels: { color: 'white' } }
+        }
+      }
+    });
+  });
+</script> {% endcomment %}
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Pie Chart
+    const pieCtx = document.getElementById('statusPieChart').getContext('2d');
+    new Chart(pieCtx, {
+      type: 'pie',
+      data: {
+        labels: ['Pending', 'Interview', 'Accepted', 'Rejected'],
+        datasets: [{
+          label: 'Status Overview',
+          data: [{{ pending }}, {{ interviewed }}, {{ accepted }}, {{ rejected }}],
+          backgroundColor: ['#ffc107', '#0dcaf0', '#198754', '#dc3545'],
+          borderColor: '#111',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        plugins: {
+          legend: { labels: { color: 'white' } }
+        }
+      }
+    });
+
+    // Bar Chart
+    const barCtx = document.getElementById('barChart').getContext('2d');
+    new Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: {{ labels|safe }},
+        datasets: [{
+          label: 'Applications',
+          data: {{ counts|safe }},
           backgroundColor: '#0dcaf0'
         }]
       },
