@@ -1,6 +1,7 @@
 # forms.py
 from django import forms
 from .models import Application
+from .models import Document
 
 # forms.py
 class ApplicationForm(forms.ModelForm):
@@ -19,3 +20,22 @@ class ApplicationForm(forms.ModelForm):
             'company_name': forms.TextInput(attrs={'class': 'form-control'}),
             'resume': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
+
+class DocumentForm(forms.ModelForm):
+    class Meta:
+        model = Document
+        fields = ['title', 'document_type', 'file', 'company_tag', 'job_role_tag']
+        
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'required': 'required'}),
+            'document_type': forms.Select(choices=Document.DOCUMENT_TYPES, attrs={'class': 'form-select', 'required': 'required'}),
+            'file': forms.ClearableFileInput(attrs={'class': 'form-control', 'required': 'required'}),
+            'company_tag': forms.TextInput(attrs={'class': 'form-control', 'required': 'required'}),
+            'job_role_tag': forms.TextInput(attrs={'class': 'form-control', 'required': 'required'}),
+        }
+        
+    def __init__(self, *args, **kwargs):
+        super(DocumentForm, self).__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.required = True
+                    

@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 # Applicant Model
 class Applicant(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=255)
     email = models.EmailField()
     phone = models.CharField(max_length=15)
@@ -49,3 +49,22 @@ class Application(models.Model):
         job_title = self.job.title if self.job else "No Job"
         job_company = self.job.company if self.job else "No Company"
         return f"{applicant_name} - {job_title} at {job_company}"
+
+
+class Document(models.Model):
+    DOCUMENT_TYPES = [
+        ('Resume', 'Resume'),
+        ('Cover Letter', 'Cover Letter'),
+        ('Portfolio', 'Portfolio'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
+    document_type = models.CharField(max_length=20, choices=DOCUMENT_TYPES, default='Resume')
+    file = models.FileField(upload_to='documents/')
+    company_tag = models.CharField(max_length=100, blank=True)
+    job_role_tag = models.CharField(max_length=100, blank=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.title} ({self.document_type})"

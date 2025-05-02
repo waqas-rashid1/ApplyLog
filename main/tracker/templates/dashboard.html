@@ -17,30 +17,14 @@
 
     <!-- Quick KPIs -->
     <div class="row text-center mb-5">
+      {% for stat in kpis %}
       <div class="col-md-3 mb-3">
         <div class="p-4 bg-dark rounded-3 shadow-sm">
-          <h5>Total Applications</h5>
-          <h2 style="color: #ffc107;">50</h2>
+          <h5>{{ stat.label }}</h5>
+          <h2 style="color: {{ stat.color }};">{{ stat.value }}</h2>
         </div>
       </div>
-      <div class="col-md-3 mb-3">
-        <div class="p-4 bg-dark rounded-3 shadow-sm">
-          <h5>Pending</h5>
-          <h2 style="color: #0dcaf0;">12</h2>
-        </div>
-      </div>
-      <div class="col-md-3 mb-3">
-        <div class="p-4 bg-dark rounded-3 shadow-sm">
-          <h5>Accepted</h5>
-          <h2 style="color: #198754;">8</h2>
-        </div>
-      </div>
-      <div class="col-md-3 mb-3">
-        <div class="p-4 bg-dark rounded-3 shadow-sm">
-          <h5>Rejected</h5>
-          <h2 style="color: #dc3545;">30</h2>
-        </div>
-      </div>
+      {% endfor %}
     </div>
 
     <!-- Charts -->
@@ -63,12 +47,12 @@
     <div class="row mb-5">
       <div class="col">
         <div class="bg-dark p-4 rounded-3 shadow-sm">
-          <h5>Quick Insights</h5>
+          <h5>📊 Quick Insights</h5>
           <ul class="list-group list-group-flush text-light">
-            <li class="list-group-item bg-dark border-secondary">🔥 Most active month: <strong>March</strong></li>
-            <li class="list-group-item bg-dark border-secondary">⏳ Average response time: <strong>3.5 days</strong></li>
-            <li class="list-group-item bg-dark border-secondary">✅ Highest success rate in: <strong>Remote Roles</strong></li>
-            <li class="list-group-item bg-dark border-secondary">🎯 Goal completion: <strong>65%</strong></li>
+            <li class="list-group-item bg-dark border-secondary">📆 <strong>{{ insights.active_month }}</strong> brought the hustle – your busiest month yet!</li>
+            <li class="list-group-item bg-dark border-secondary">⏱️ On average, responses rolled in after <strong>{{ insights.avg_response_time }} days</strong>.</li>
+            <li class="list-group-item bg-dark border-secondary">🌍 You shined in <strong>{{ insights.best_category }}</strong> – top success rate there!</li>
+            <li class="list-group-item bg-dark border-secondary">🎯 You’ve crushed <strong>{{ insights.goal_completion }}%</strong> of your application goals – keep pushing!</li>
           </ul>
         </div>
       </div>
@@ -89,30 +73,14 @@
               </tr>
             </thead>
             <tbody>
+              {% for app in recent_applications %}
               <tr>
-                <td>Google</td>
-                <td>Software Engineer</td>
-                <td><span class="badge bg-warning">Pending</span></td>
-                <td>2025-04-01</td>
+                <td>{{ app.company }}</td>
+                <td>{{ app.position }}</td>
+                <td><span class="badge bg-{{ app.status_class }}">{{ app.status }}</span></td>
+                <td>{{ app.date }}</td>
               </tr>
-              <tr>
-                <td>Amazon</td>
-                <td>DevOps Engineer</td>
-                <td><span class="badge bg-success">Accepted</span></td>
-                <td>2025-03-20</td>
-              </tr>
-              <tr>
-                <td>Meta</td>
-                <td>Backend Developer</td>
-                <td><span class="badge bg-danger">Rejected</span></td>
-                <td>2025-03-15</td>
-              </tr>
-              <tr>
-                <td>Microsoft</td>
-                <td>Data Scientist</td>
-                <td><span class="badge bg-info">Interviewed</span></td>
-                <td>2025-03-05</td>
-              </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>
@@ -131,9 +99,9 @@
   new Chart(pieCtx, {
     type: 'pie',
     data: {
-      labels: ['Pending', 'Accepted', 'Rejected', 'Interviewed'],
+      labels: {{ pie_chart.labels|safe }},
       datasets: [{
-        data: [12, 8, 30, 5],
+        data: {{ pie_chart.data|safe }},
         backgroundColor: ['#ffc107', '#198754', '#dc3545', '#0dcaf0'],
         borderColor: '#111',
         borderWidth: 1
@@ -149,10 +117,10 @@
   new Chart(lineCtx, {
     type: 'line',
     data: {
-      labels: ['Jan', 'Feb', 'Mar', 'Apr'],
+      labels: {{ line_chart.labels|safe }},
       datasets: [{
         label: 'Applications Sent',
-        data: [5, 12, 20, 13],
+        data: {{ line_chart.data|safe }},
         borderColor: '#ffc107',
         backgroundColor: 'rgba(255,193,7,0.2)',
         tension: 0.3,

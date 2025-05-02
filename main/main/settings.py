@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     
     # 'crispy_forms',
     # 'crispy_bootstrap5',
-    'tracker',
+    # 'tracker',
+    'tracker.apps.TrackerConfig',  # Use the AppConfig class
 ]
 
 MIDDLEWARE = [

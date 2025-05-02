@@ -82,7 +82,13 @@
                       <p><strong>Status:</strong> {{ application.status }}</p>
                       <p><strong>Cover Letter:</strong></p>
                       <p>{{ application.cover_letter }}</p>
-                      <p><strong>Resume:</strong> <a href="{{ application.resume.url }}" target="_blank" class="text-warning">View Resume</a></p>
+                      <p><strong>Resume:</strong>
+                        {% if application.resume %}
+                          <a href="{{ application.resume.url }}" target="_blank" class="text-warning">View Resume</a>
+                        {% else %}
+                          <span class="text-muted">No resume uploaded</span>
+                        {% endif %}
+                      </p>
                       <p><strong>Additional Notes:</strong> {{ application.notes }}</p>
                     </div>
                     <div class="modal-footer">
