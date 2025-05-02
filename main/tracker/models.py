@@ -68,3 +68,16 @@ class Document(models.Model):
 
     def __str__(self):
         return f"{self.title} ({self.document_type})"
+
+class SavedJob(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    job_title = models.CharField(max_length=255)
+    company = models.CharField(max_length=255)
+    job_link = models.URLField()
+    deadline = models.DateField(null=True, blank=True)
+    notes = models.TextField(blank=True)
+    saved_at = models.DateTimeField(auto_now_add=True)
+    applied = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.job_title} at {self.company}"

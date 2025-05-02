@@ -2,6 +2,7 @@
 from django import forms
 from .models import Application
 from .models import Document
+from .models import SavedJob
 
 # forms.py
 class ApplicationForm(forms.ModelForm):
@@ -38,4 +39,12 @@ class DocumentForm(forms.ModelForm):
         super(DocumentForm, self).__init__(*args, **kwargs)
         for field in self.fields.values():
             field.required = True
-                    
+
+class SavedJobForm(forms.ModelForm):
+    class Meta:
+        model = SavedJob
+        fields = ['job_title', 'company', 'job_link', 'deadline', 'notes']
+        widgets = {
+            'deadline': forms.DateInput(attrs={'type': 'date'}),
+            'notes': forms.Textarea(attrs={'rows': 2}),
+        }

@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load form_filters %}
+
+{% block content %}
+
+<!-- Header Section -->
+<section class="d-flex align-items-center justify-content-center text-white" style="height: 80vh; background: linear-gradient(135deg, #0f0f0f, #1e1e1e, #2a2a2a);">
+  <div class="text-center">
+    <h1 class="display-4 fw-bold" style="color: #ffca2c;">🌟 Job Wishlist</h1>
+    <p class="lead text-light">Keep track of exciting opportunities you're aiming for.</p>
+  </div>
+</section>
+
+<!-- Main Content -->
+<section class="py-5 px-4" style="background-color: #121212;">
+  <div class="container text-light">
+
+    <!-- Add Job Form -->
+    <div class="bg-dark p-4 rounded-3 mb-5 shadow-sm">
+      <h4 class="mb-4" style="color: #ffca2c;">📝 Add New Job</h4>
+      <form method="POST">
+        {% csrf_token %}
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="id_job_title" class="form-label">Job Title</label>
+            {{ form.job_title|add_class:"form-control bg-dark text-light border border-secondary rounded-3" }}
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="id_company" class="form-label">Company</label>
+            {{ form.company|add_class:"form-control bg-dark text-light border border-secondary rounded-3" }}
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="id_job_link" class="form-label">Job Link</label>
+          {{ form.job_link|add_class:"form-control bg-dark text-light border border-secondary rounded-3" }}
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="id_deadline" class="form-label">Deadline</label>
+            {{ form.deadline|add_class:"form-control bg-dark text-light border border-secondary rounded-3" }}
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="id_notes" class="form-label">Notes</label>
+            {{ form.notes|add_class:"form-control bg-dark text-light border border-secondary rounded-3" }}
+          </div>
+        </div>
+        <button type="submit" class="btn w-100 mt-3" style="background-color: #ffca2c; color: #000;">➕ Add Job</button>
+      </form>
+    </div>
+
+    <!-- Saved Jobs Table -->
+    <div class="table-responsive">
+        <table class="table align-middle text-light" style="background-color: #1a1a1a; border-radius: 12px; overflow: hidden;">
+          <thead class="text-warning" style="background-color: #2a2a2a;">
+            <tr>
+              <th class="py-3 px-4">📌 Title</th>
+              <th class="py-3 px-4">🏢 Company</th>
+              <th class="py-3 px-4">🔗 Link</th>
+              <th class="py-3 px-4">📅 Deadline</th>
+              <th class="py-3 px-4">📝 Notes</th>
+              <th class="py-3 px-4">📌 Status</th>
+              <th class="py-3 px-4">⚙️ Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for job in saved_jobs %}
+            <tr style="background-color: {% if job.applied %}#1e2a1e{% else %}#1a1a1a{% endif %}; border-bottom: 1px solid #2e2e2e;">
+              <td class="py-3 px-4">{{ job.job_title }}</td>
+              <td class="py-3 px-4">{{ job.company }}</td>
+              <td class="py-3 px-4">
+                <a href="{{ job.job_link }}" target="_blank" class="btn btn-sm btn-outline-warning rounded-3">🔗 View</a>
+              </td>
+              <td class="py-3 px-4">{{ job.deadline|default:"-" }}</td>
+              <td class="py-3 px-4">{{ job.notes|default:"-" }}</td>
+              <td class="py-3 px-4">
+                {% if job.applied %}
+                  <span class="badge rounded-3 bg-success px-3 py-2">✅ Applied</span>
+                {% else %}
+                  <span class="badge rounded-3 bg-secondary px-3 py-2">⏳ Pending</span>
+                {% endif %}
+              </td>
+              <td class="py-3 px-4">
+                <div class="d-flex flex-wrap gap-2">
+                  {% if not job.applied %}
+                    <a href="{% url 'mark_job_applied' job.id %}" class="btn btn-sm btn-outline-success rounded-3">✅ Mark as Applied</a>
+                  {% endif %}
+                  <a href="{% url 'delete_saved_job' job.id %}" class="btn btn-sm btn-outline-danger rounded-3">🗑 Delete</a>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+  </div>
+</section>
+
+{% endblock %}
+
+<style>
+    .form-control:focus {
+      border-color: #ffca2c !important;
+      box-shadow: 0 0 0 0.2rem rgba(255, 202, 44, 0.25);
+    }
+</style>
+  

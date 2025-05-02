@@ -8,4 +8,7 @@ urlpatterns = [
     # path('stats/', views.application_stats, name='application_stats'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('library/', views.document_library, name='document_library'),
+    path('wishlist/', views.wishlist_view, name='wishlist'),
+    path('wishlist/delete/<int:job_id>/', views.delete_saved_job, name='delete_saved_job'),
+    path('job/applied/<int:job_id>/', views.mark_job_applied, name='mark_job_applied'),
 ] 

@@ -14,6 +14,8 @@ from django.db.models.functions import ExtractWeekDay
 from django.db.models import F, ExpressionWrapper, fields, Avg
 from django.db.models.functions import Now
 from django.contrib.auth.decorators import login_required
+from .models import SavedJob
+from .forms import SavedJobForm
 
 def add_application(request):
     form = ApplicationForm()
@@ -330,3 +332,31 @@ def document_library(request):
         form = DocumentForm()
 
     return render(request, 'document_library.html', {'form': form, 'documents': documents})
+
+@login_required
+def wishlist_view(request):
+    saved_jobs = SavedJob.objects.filter(user=request.user).order_by('-saved_at')
+    form = SavedJobForm()
+
+    if request.method == 'POST':
+        form = SavedJobForm(request.POST)
+        if form.is_valid():
+            job = form.save(commit=False)
+            job.user = request.user
+            job.save()
+            return redirect('wishlist')
+
+    return render(request, 'wishlist.html', {'form': form, 'saved_jobs': saved_jobs})
+
+@login_required
+def delete_saved_job(request, job_id):
+    job = get_object_or_404(SavedJob, id=job_id, user=request.user)
+    job.delete()
+    return redirect('wishlist')
+
+@login_required
+def mark_job_applied(request, job_id):
+    job = get_object_or_404(SavedJob, pk=job_id)
+    job.applied = True
+    job.save()
+    return redirect('wishlist')
