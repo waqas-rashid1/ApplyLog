@@ -26,25 +26,12 @@ def add_application(request):
 
 @login_required
 def application_history(request):
-    search_query = request.GET.get('search', '')
-    status_filter = request.GET.get('status', '')
-
-    # Show only applications belonging to the logged-in user
-    applications = Application.objects.filter(applicant__user=request.user).select_related('applicant', 'job')
-
-    if search_query:
-        applications = applications.filter(
-            Q(applicant__name__icontains=search_query) |
-            Q(job__title__icontains=search_query)
-        )
-
-    if status_filter:
-        applications = applications.filter(status=status_filter)
+    user = request.user
+    applications = Application.objects.filter(applicant__user=user).select_related('applicant', 'job')
 
     context = {
         'applications': applications
     }
-
     return render(request, 'application_history.html', context)
 
 def application_stats(request):

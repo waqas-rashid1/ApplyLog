@@ -2,11 +2,30 @@
 {% load static %}
 
 {% block content %}
-<!-- Header Section with 100% Height and Dark Gradient -->
-<section class="d-flex align-items-center justify-content-center text-white" style="
-  height: 100vh;
-  background: linear-gradient(135deg, #0f0f0f, #1e1e1e, #2a2a2a);
-">
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('filter-btn').addEventListener('click', function () {
+      const searchValue = document.getElementById('search').value.toLowerCase();
+      const statusFilter = document.getElementById('status-filter').value;
+      const rows = document.querySelectorAll('tbody tr');
+
+      rows.forEach(row => {
+        const name = row.children[0].textContent.toLowerCase();
+        const position = row.children[1].textContent.toLowerCase();
+        const statusKey = row.getAttribute('data-status');
+
+        const matchesSearch = name.includes(searchValue) || position.includes(searchValue);
+        const matchesStatus = !statusFilter || statusKey === statusFilter;
+
+        row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
+      });
+    });
+  });
+</script>
+
+<!-- Header Section -->
+<section class="d-flex align-items-center justify-content-center text-white" style="height: 100vh; background: linear-gradient(135deg, #0f0f0f, #1e1e1e, #2a2a2a);">
   <div class="text-center">
     <h1 class="display-4 fw-bold" style="color: #ffca2c;">Application History</h1>
     <p class="lead text-light">Explore the status of your previous applications and details for each one.</p>
@@ -18,7 +37,7 @@
   <div class="container">
     <div class="card shadow-lg border-0 rounded-4 p-4" style="background-color: #333; color: white;">
       
-      <!-- Filter and Search Bar -->
+      <!-- Filter and Search -->
       <div class="row mb-4">
         <div class="col-md-4">
           <input type="text" class="form-control" placeholder="Search by Name or Position" id="search" style="background-color: #444; color: white;">
@@ -26,9 +45,9 @@
         <div class="col-md-4">
           <select class="form-select" id="status-filter" style="background-color: #444; color: white;">
             <option value="">All Statuses</option>
-            <option value="Pending">Pending</option>
-            <option value="Approved">Approved</option>
-            <option value="Rejected">Rejected</option>
+            {% for key, value in applications.first.STATUS_CHOICES %}
+              <option value="{{ key }}">{{ value }}</option>
+            {% endfor %}
           </select>
         </div>
         <div class="col-md-4 text-center">
@@ -36,72 +55,77 @@
         </div>
       </div>
 
-      <!-- Application History Table -->
+      <!-- Application Table -->
       <div class="table-responsive">
         <table class="table table-dark table-striped">
           <thead>
             <tr>
-              <th scope="col">Applicant Name</th>
-              <th scope="col">Position Applied</th>
-              <th scope="col">Company</th>
-              <th scope="col">Application Date</th>
-              <th scope="col">Status</th>
-              <th scope="col">Actions</th>
+              <th>Applicant Name</th>
+              <th>Position</th>
+              <th>Company</th>
+              <th>Date Applied</th>
+              <th>Status</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {% for application in applications %}
               <tr>
-                <td>{{ application.applicant_name }}</td>
-                <td>{{ application.position_applied }}</td>
-                <td>{{ application.company_name }}</td>
-                <td>{{ application.application_date }}</td>
-                <td>{{ application.status }}</td>
+                <td>{{ application.applicant.name }}</td>
+                <td>{{ application.job.title }}</td>
+                <td>{{ application.job.company }}</td>
+                <td>{{ application.date_applied }}</td>
+                <td>{{ application.get_status_display }}</td>
                 <td>
-                  <!-- View Details Button -->
-                  <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#applicationModal{{ application.id }}">View Details</button>
+                  <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#appModal{{ application.id }}">View Details</button>
                 </td>
               </tr>
-
-              <!-- Modal for Viewing Application Details -->
-              <div class="modal fade" id="applicationModal{{ application.id }}" tabindex="-1" aria-labelledby="applicationModalLabel{{ application.id }}" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                  <div class="modal-content" style="background-color: #333; color: white;">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="applicationModalLabel{{ application.id }}">Application Details</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                      <!-- Display Full Application Details -->
-                      <h4>Applicant Name: {{ application.applicant_name }}</h4>
-                      <p><strong>Email:</strong> {{ application.email }}</p>
-                      <p><strong>Phone:</strong> {{ application.phone }}</p>
-                      <p><strong>Position Applied:</strong> {{ application.position_applied }}</p>
-                      <p><strong>Company Name:</strong> {{ application.company_name }}</p>
-                      <p><strong>Application Date:</strong> {{ application.application_date }}</p>
-                      <p><strong>Status:</strong> {{ application.status }}</p>
-                      <p><strong>Cover Letter:</strong></p>
-                      <p>{{ application.cover_letter }}</p>
-                      <p><strong>Resume:</strong>
-                        {% if application.resume %}
-                          <a href="{{ application.resume.url }}" target="_blank" class="text-warning">View Resume</a>
-                        {% else %}
-                          <span class="text-muted">No resume uploaded</span>
-                        {% endif %}
-                      </p>
-                      <p><strong>Additional Notes:</strong> {{ application.notes }}</p>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
             {% endfor %}
           </tbody>
         </table>
       </div>
-      
+
+      <!-- Modals (Placed outside table) -->
+      {% for application in applications %}
+        <div class="modal fade" id="appModal{{ application.id }}" tabindex="-1" aria-labelledby="modalLabel{{ application.id }}" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="background-color: #333; color: white;">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel{{ application.id }}">Application Details</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <h4>{{ application.applicant.name }}</h4>
+                <p><strong>Email:</strong> {{ application.applicant.email }}</p>
+                <p><strong>Phone:</strong> {{ application.applicant.phone }}</p>
+                <hr>
+                <p><strong>Job Title:</strong> {{ application.job.title }}</p>
+                <p><strong>Company:</strong> {{ application.job.company }}</p>
+                <p><strong>Source:</strong> {{ application.job.source }}</p>
+                <p><strong>Website:</strong> <a href="{{ application.job.website_link }}" target="_blank" class="text-warning">{{ application.job.website_link }}</a></p>
+                <hr>
+                <p><strong>Date Applied:</strong> {{ application.date_applied }}</p>
+                <p><strong>Status:</strong> {{ application.get_status_display }}</p>
+                <p><strong>Cover Letter:</strong></p>
+                <p>{{ application.cover_letter|linebreaks }}</p>
+                <p><strong>Resume:</strong>
+                  {% if application.resume %}
+                    <a href="{{ application.resume.url }}" target="_blank" class="text-warning">View Resume</a>
+                  {% else %}
+                    <span class="text-muted">No resume uploaded</span>
+                  {% endif %}
+                </p>
+                <p><strong>Additional Notes:</strong></p>
+                <p>{{ application.notes|linebreaks }}</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+
     </div>
   </div>
 </section>
