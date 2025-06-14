@@ -1,36 +1,35 @@
-{% extends "base.html" %}
-{% load static %}
+{% extends "base.html" %} 
+{% load static %} 
 {% block content %}
 <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #121212;
-      color: #f0f0f0;
-    }
-    .glass-card {
-      background: rgba(30, 30, 30, 0.7);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      padding: 40px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-      color: #fff;
-    }
-    .glass-card h2, .glass-card h4, .glass-card h5 {
-      color: #ffca2c;
-    }
-   
-    iframe {
-      border: none;
-    }
-  </style>
+  body {
+    font-family: "Poppins", sans-serif;
+    background-color: #121212;
+    color: #f0f0f0;
+  }
+  .glass-card {
+    background: rgba(30, 30, 30, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    color: #fff;
+  }
+  .glass-card h2,
+  .glass-card h4,
+  .glass-card h5 {
+    color: #ffca2c;
+  }
+  iframe {
+    border: none;
+  }
+</style>
 
 <!-- Header -->
-<section class="d-flex align-items-center justify-content-center text-white" style="
-  height: 100vh;
-  background: linear-gradient(135deg, #0f0f0f, #1e1e1e, #2a2a2a);
-">
+<section class="d-flex align-items-center justify-content-center text-white"
+  style="height: 100vh; background: linear-gradient(135deg, #0f0f0f, #1e1e1e, #2a2a2a);">
   <div class="text-center">
-    <h1 class="display-4 fw-bold" style="color: #ffca2c;">Contact Us</h1>
+    <h1 class="display-4 fw-bold" style="color: #ffca2c">Contact Us</h1>
     <p class="lead text-light">We’d love to hear from you. Let’s build something amazing together.</p>
   </div>
 </section>
@@ -43,20 +42,25 @@
       <div class="col-lg-7">
         <div class="glass-card">
           <h2 class="mb-4 fw-bold">Drop Us a Line</h2>
-          <form onsubmit="handleForm(event)">
+          <form action="https://formsubmit.co/waqasdotdev@gmail.com" method="POST">
+            <!-- Hidden options -->
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_next" value="https://yourdomain.com/thank-you">
+
             <div class="mb-3">
               <label class="form-label">Full Name</label>
-              <input type="text" class="form-control rounded-3" required placeholder="John Doe" />
+              <input type="text" name="name" class="form-control rounded-3" required placeholder="John Doe">
             </div>
             <div class="mb-3">
               <label class="form-label">Email Address</label>
-              <input type="email" class="form-control rounded-3" required placeholder="you@example.com" />
+              <input type="email" name="email" class="form-control rounded-3" required placeholder="you@example.com">
             </div>
             <div class="mb-3">
               <label class="form-label">Your Message</label>
-              <textarea class="form-control rounded-3" rows="4" required placeholder="What's on your mind?"></textarea>
+              <textarea name="message" class="form-control rounded-3" rows="4" required
+                placeholder="What's on your mind?"></textarea>
             </div>
-            <button type="submit" class="btn btn-primary px-4 py-2 rounded-pill">Send</button>
+            <button type="submit" class="btn btn-primary px-4 py-2">Send</button>
           </form>
         </div>
       </div>
@@ -65,16 +69,16 @@
       <div class="col-lg-5">
         <div class="glass-card">
           <h4 class="fw-bold">Connect With Us</h4>
-          <p><i class="bi bi-envelope-fill text-warning me-2"></i> support@applylog.com</p>
-          <p><i class="bi bi-phone-fill text-warning me-2"></i> +92 300 1234567</p>
+          <p><i class="bi bi-envelope-fill text-warning me-2"></i> waqasdotdev@gmail.com</p>
+          <p><i class="bi bi-phone-fill text-warning me-2"></i> +92 334 8076605</p>
           <p><i class="bi bi-geo-alt-fill text-warning me-2"></i> Lahore, Pakistan</p>
 
-          <hr class="my-4" style="border-color: rgba(255,255,255,0.1);" />
+          <hr class="my-4" style="border-color: rgba(255, 255, 255, 0.1)" />
 
           <h5 class="fw-semibold">Follow Us</h5>
           <a href="#" class="text-light me-3"><i class="bi bi-facebook fs-4"></i></a>
-          <a href="#" class="text-light me-3"><i class="bi bi-linkedin fs-4"></i></a>
-          <a href="#" class="text-light"><i class="bi bi-github fs-4"></i></a>
+          <a href="www.linkedin.com/in/waqas-rashid1" class="text-light me-3"><i class="bi bi-linkedin fs-4"></i></a>
+          <a href="www.github.com/waqas-rashid1" class="text-light"><i class="bi bi-github fs-4"></i></a>
         </div>
       </div>
     </div>
@@ -84,40 +88,12 @@
 <!-- Google Map Embed -->
 <section class="my-5">
   <div class="container">
-    <div class="rounded-4 overflow-hidden shadow" style="height: 400px;">
+    <div class="rounded-4 overflow-hidden shadow" style="height: 400px">
       <iframe
         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13611.570015322074!2d74.304697!3d31.5203699!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x391905df2ef48e97%3A0x4dfb7dbe49dfb917!2sLahore%2C%20Punjab%2C%20Pakistan!5e0!3m2!1sen!2s!4v1697195914566"
-        width="100%" height="100%" loading="lazy" allowfullscreen>
-      </iframe>
+        width="100%" height="100%" loading="lazy" allowfullscreen></iframe>
     </div>
   </div>
 </section>
-
-
-<!-- Toast Notification -->
-<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1055;">
-  <div id="formToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
-    <div class="d-flex">
-      <div class="toast-body">Your message has been sent! 🚀</div>
-      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-    </div>
-  </div>
-</div>
-
-<!-- JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-  function handleForm(event) {
-    event.preventDefault();
-    const toast = new bootstrap.Toast(document.getElementById('formToast'));
-    toast.show();
-    event.target.reset();
-  }
-
-  function scrollToForm() {
-    window.scrollTo({ top: document.body.scrollHeight / 3, behavior: 'smooth' });
-  }
-</script>
-
 
 {% endblock %}

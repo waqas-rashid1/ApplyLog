@@ -74,7 +74,7 @@ class SavedJob(models.Model):
     job_title = models.CharField(max_length=255)
     company = models.CharField(max_length=255)
     job_link = models.URLField()
-    deadline = models.DateField(null=True, blank=True)
+    deadline = models.DateField()
     notes = models.TextField(blank=True)
     saved_at = models.DateTimeField(auto_now_add=True)
     applied = models.BooleanField(default=False)

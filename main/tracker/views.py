@@ -80,6 +80,7 @@ def dashboard(request):
     kpis = [
         {"label": "Total Applications", "value": total_apps, "color": "#ffc107"},
         {"label": "Pending", "value": status_dict.get("pending", 0), "color": "#0dcaf0"},
+        {"label": "Applied", "value": status_dict.get("applied", 0), "color": "#fd7e14"},
         {"label": "Interview", "value": status_dict.get("interview", 0), "color": "#0d6efd"},
         {"label": "Offer", "value": status_dict.get("offer", 0), "color": "#6610f2"},
         {"label": "Joined", "value": status_dict.get("joined", 0), "color": "#198754"},
@@ -106,7 +107,7 @@ def dashboard(request):
     }
 
     # --- Recent Applications ---
-    recent_apps = applications.order_by('-date_applied')[:5]
+    recent_apps = applications.order_by('-date_applied')[:10]
 
     status_badge = {
         'pending': 'warning',
@@ -354,9 +355,52 @@ def delete_saved_job(request, job_id):
     job.delete()
     return redirect('wishlist')
 
+
 @login_required
 def mark_job_applied(request, job_id):
-    job = get_object_or_404(SavedJob, pk=job_id)
-    job.applied = True
-    job.save()
+    saved_job = get_object_or_404(SavedJob, id=job_id, user=request.user)
+
+    saved_job.applied = True
+    saved_job.save()
+
+    job_obj, _ = Job.objects.get_or_create(
+        title=saved_job.job_title,
+        company=saved_job.company,
+        website_link=saved_job.job_link,
+        defaults={'source': 'wishlist'}
+    )
+
+    # Use .filter().first() to avoid MultipleObjectsReturned
+    applicant = Applicant.objects.filter(user=request.user).first()
+    if not applicant:
+        applicant = Applicant.objects.create(
+            user=request.user,
+            name=request.user.get_full_name() or request.user.username,
+            email=request.user.email,
+            phone="N/A"
+        )
+
+    # Create Application
+    Application.objects.get_or_create(
+        applicant=applicant,
+        job=job_obj,
+        defaults={
+            'date_applied': timezone.now().date(),
+            'status': 'applied',
+            'notes': saved_job.notes,
+        }
+    )
+
     return redirect('wishlist')
+
+from django.shortcuts import get_object_or_404, redirect
+from .models import Application
+
+def update_application_status(request, application_id):
+    if request.method == 'POST':
+        application = get_object_or_404(Application, pk=application_id)
+        new_status = request.POST.get('status')
+        if new_status in dict(application.STATUS_CHOICES):  # Optional: Validate status
+            application.status = new_status
+            application.save()
+    return redirect('application_history')  # or wherever your table view is

@@ -33,7 +33,7 @@
 </section>
 
 <!-- Main Content Section -->
-<section class="py-5" style="background-color: #2a2a2a; min-height: 100vh;">
+<section class="py-5" style="background-color: #2a2a2a; min-height: calc(100vh - 120px);">
   <div class="container">
     <div class="card shadow-lg border-0 rounded-4 p-4" style="background-color: #333; color: white;">
       
@@ -65,19 +65,48 @@
               <th>Company</th>
               <th>Date Applied</th>
               <th>Status</th>
-              <th>Actions</th>
+              <th class="text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
             {% for application in applications %}
-              <tr>
+              <tr data-status="{{ application.status }}">
                 <td>{{ application.applicant.name }}</td>
                 <td>{{ application.job.title }}</td>
                 <td>{{ application.job.company }}</td>
                 <td>{{ application.date_applied }}</td>
                 <td>{{ application.get_status_display }}</td>
-                <td>
-                  <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#appModal{{ application.id }}">View Details</button>
+                <td class="text-center">
+                  <div class="d-flex flex-column gap-1 align-items-center align-items-md-start">
+                    <!-- View Details Button -->
+                    <button class="btn btn-info btn-sm" data-bs-toggle="modal" title="View application details" data-bs-target="#appModal{{ application.id }}">
+                      View
+                    </button>
+
+                    <!-- Dropdown for Update Status -->
+                    {% if application.id %}
+                      <div class="dropdown">
+                        <button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          Update Status
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-dark p-2" style="min-width: 220px;">
+                          <form method="POST" action="{% url 'update_application_status' application.id %}">
+                            {% csrf_token %}
+                            <div class="form-group mb-2">
+                              <select name="status" class="form-select form-select-sm">
+                                {% for key, value in application.STATUS_CHOICES %}
+                                  <option value="{{ key }}" {% if application.status == key %}selected{% endif %}>{{ value }}</option>
+                                {% endfor %}
+                              </select>
+                            </div>
+                            <button type="submit" class="btn btn-sm btn-light w-100">Save</button>
+                          </form>
+                        </ul>
+                      </div>
+                    {% else %}
+                      <span class="text-muted">Invalid ID</span>
+                    {% endif %}
+                  </div>
                 </td>
               </tr>
             {% endfor %}

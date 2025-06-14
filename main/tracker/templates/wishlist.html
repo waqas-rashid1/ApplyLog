@@ -18,21 +18,21 @@
 
     <!-- Add Job Form -->
     <div class="bg-dark p-4 rounded-3 mb-5 shadow-sm">
-      <h4 class="mb-4" style="color: #ffca2c;">📝 Add New Job</h4>
+      <h4 class="mb-4" style="color: #ffca2c;">Add New Job</h4>
       <form method="POST">
         {% csrf_token %}
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label for="id_job_title" class="form-label">Job Title</label>
+            <label for="id_job_title" class="form-label">Job Title <span class="text-danger">*</span> </label>
             {{ form.job_title|add_class:"form-control bg-dark text-light border border-secondary rounded-3" }}
           </div>
           <div class="col-md-6 mb-3">
-            <label for="id_company" class="form-label">Company</label>
+            <label for="id_company" class="form-label">Company <span class="text-danger">*</span> </label>
             {{ form.company|add_class:"form-control bg-dark text-light border border-secondary rounded-3" }}
           </div>
         </div>
         <div class="mb-3">
-          <label for="id_job_link" class="form-label">Job Link</label>
+          <label for="id_job_link" class="form-label">Job Link <span class="text-danger">*</span> </label>
           {{ form.job_link|add_class:"form-control bg-dark text-light border border-secondary rounded-3" }}
         </div>
         <div class="row">
@@ -45,7 +45,7 @@
             {{ form.notes|add_class:"form-control bg-dark text-light border border-secondary rounded-3" }}
           </div>
         </div>
-        <button type="submit" class="btn w-100 mt-3" style="background-color: #ffca2c; color: #000;">➕ Add Job</button>
+        <button type="submit" class="btn w-100 mt-3" style="background-color: #ffca2c; color: #000;">Add Job</button>
       </form>
     </div>
 

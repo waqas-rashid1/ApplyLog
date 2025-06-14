@@ -11,4 +11,5 @@ urlpatterns = [
     path('wishlist/', views.wishlist_view, name='wishlist'),
     path('wishlist/delete/<int:job_id>/', views.delete_saved_job, name='delete_saved_job'),
     path('job/applied/<int:job_id>/', views.mark_job_applied, name='mark_job_applied'),
+    path('update-status/<int:application_id>/', views.update_application_status, name='update_application_status'),
 ] 

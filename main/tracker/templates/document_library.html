@@ -16,34 +16,47 @@
   <div class="container text-light">
 
     <!-- Upload Form -->
-    <div class="bg-dark p-4 rounded-3 mb-5 shadow-sm">
-      <h4 class="mb-4 text-warning">📤 Upload New Document</h4>
+   <div class="bg-dark p-4 rounded-3 mb-5 shadow-sm">
+      <h4 class="mb-4 text-warning">Upload New Document</h4>
       <form method="POST" enctype="multipart/form-data">  
         {% csrf_token %}
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label for="id_title">Title</label>
-            {{ form.title }}
+            <label for="id_title" class="form-label">
+              Title <span class="text-danger">*</span>
+            </label>
+            <div class="mt-1">{{ form.title }}</div>
           </div>
           <div class="col-md-6 mb-3">
-            <label for="id_document_type">Document Type</label>
-            {{ form.document_type }}
+            <label for="id_document_type" class="form-label">
+              Document Type <span class="text-danger">*</span>
+            </label>
+            <div class="mt-1">{{ form.document_type }}</div>
           </div>
         </div>
+
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label for="id_company_tag">Company Tag</label>
-            {{ form.company_tag }}
+            <label for="id_company_tag" class="form-label">
+              Company Tag <span class="text-danger">*</span>
+            </label>
+            <div class="mt-1">{{ form.company_tag }}</div>
           </div>
           <div class="col-md-6 mb-3">
-            <label for="id_job_role_tag">Job Role Tag</label>
-            {{ form.job_role_tag }}
+            <label for="id_job_role_tag" class="form-label">
+              Job Role Tag <span class="text-danger">*</span>
+            </label>
+            <div class="mt-1">{{ form.job_role_tag }}</div>
           </div>
         </div>
+
         <div class="mb-3">
-          <label for="id_file">Select File</label>
-          {{ form.file }}
+          <label for="id_file" class="form-label">
+            Select File <span class="text-danger">*</span>
+          </label>
+          <div class="mt-1">{{ form.file }}</div>
         </div>
+
         <button type="submit" class="btn btn-warning w-100">Upload Document</button>
       </form>
     </div>

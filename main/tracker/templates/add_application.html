@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-<!-- Header Section with 100% Height and Dark Gradient -->
+<!-- Header Section -->
 <section class="d-flex align-items-center justify-content-center text-white" style="
   height: 100vh;
   background: linear-gradient(135deg, #0f0f0f, #1e1e1e, #2a2a2a);
@@ -12,6 +12,33 @@
     <p class="lead text-light">Fill out the form below to apply for your desired position.</p>
   </div>
 </section>
+
+
+{% if form.errors %}
+<!-- Modal for Form Errors -->
+<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-danger text-white">
+      <div class="modal-header border-0">
+        <h5 class="modal-title" id="errorModalLabel">Submission Error</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="mb-0">
+          {% for field in form %}
+            {% for error in field.errors %}
+              <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+            {% endfor %}
+          {% endfor %}
+          {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
 
 <!-- Main Content Section -->
 <section class="py-5" style="background-color: #2a2a2a; min-height: 100vh;">
@@ -23,7 +50,9 @@
         <!-- Applicant Name Field -->
         <div class="row mb-3">
           <div class="col-md-4 d-flex align-items-center">
-            <label for="id_applicant_name" class="form-label text-white fw-semibold">Applicant Name</label>
+            <label for="id_applicant_name" class="form-label text-white fw-semibold">
+              Applicant Name <span class="text-danger">*</span>
+            </label>
           </div>
           <div class="col-md-8">
             <input type="text" name="applicant_name" id="id_applicant_name" class="form-control" placeholder="Enter your full name" value="{{ form.applicant_name.value }}" style="background-color: #444; color: white;" required>
@@ -33,7 +62,9 @@
         <!-- Email Field -->
         <div class="row mb-3">
           <div class="col-md-4 d-flex align-items-center">
-            <label for="id_email" class="form-label text-white fw-semibold">Email</label>
+            <label for="id_email" class="form-label text-white fw-semibold">
+              Email <span class="text-danger">*</span>
+            </label>
           </div>
           <div class="col-md-8">
             <input type="email" name="email" id="id_email" class="form-control" placeholder="Enter your email" value="{{ form.email.value }}" style="background-color: #444; color: white;" required>
@@ -43,7 +74,9 @@
         <!-- Phone Field -->
         <div class="row mb-3">
           <div class="col-md-4 d-flex align-items-center">
-            <label for="id_phone" class="form-label text-white fw-semibold">Phone</label>
+            <label for="id_phone" class="form-label text-white fw-semibold">
+              Phone <span class="text-danger">*</span>
+            </label>
           </div>
           <div class="col-md-8">
             <input type="text" name="phone" id="id_phone" class="form-control" placeholder="Enter your phone number" value="{{ form.phone.value }}" style="background-color: #444; color: white;" required>
@@ -53,7 +86,9 @@
         <!-- Position Applied Field -->
         <div class="row mb-3">
           <div class="col-md-4 d-flex align-items-center">
-            <label for="id_position_applied" class="form-label text-white fw-semibold">Position Applied</label>
+            <label for="id_position_applied" class="form-label text-white fw-semibold">
+              Position Applied <span class="text-danger">*</span>
+            </label>
           </div>
           <div class="col-md-8">
             <input type="text" name="position_applied" id="id_position_applied" class="form-control" placeholder="Position you're applying for" value="{{ form.position_applied.value }}" style="background-color: #444; color: white;" required>
@@ -63,7 +98,9 @@
         <!-- Company Name Field -->
         <div class="row mb-3">
           <div class="col-md-4 d-flex align-items-center">
-            <label for="id_company_name" class="form-label text-white fw-semibold">Company Name</label>
+            <label for="id_company_name" class="form-label text-white fw-semibold">
+              Company Name <span class="text-danger">*</span>
+            </label>
           </div>
           <div class="col-md-8">
             <input type="text" name="company_name" id="id_company_name" class="form-control" placeholder="Enter the company's name" value="{{ form.company_name.value }}" style="background-color: #444; color: white;" required>
@@ -71,32 +108,34 @@
         </div>
 
         <!-- Website Link Field -->
-<div class="row mb-3">
-  <div class="col-md-4 d-flex align-items-center">
-    <label for="id_website_link" class="form-label text-white fw-semibold">Website Link</label>
-  </div>
-  <div class="col-md-8">
-    <input type="url" name="website_link" id="id_website_link" class="form-control" placeholder="Enter the job posting URL" value="{{ form.website_link.value }}" style="background-color: #444; color: white;">
-  </div>
-</div>
+        <div class="row mb-3">
+          <div class="col-md-4 d-flex align-items-center">
+            <label for="id_website_link" class="form-label text-white fw-semibold">Website Link</label>
+          </div>
+          <div class="col-md-8">
+            <input type="url" name="website_link" id="id_website_link" class="form-control" placeholder="Enter the job posting URL" value="{{ form.website_link.value }}" style="background-color: #444; color: white;">
+          </div>
+        </div>
 
-<!-- Source Field -->
-<div class="row mb-3">
-  <div class="col-md-4 d-flex align-items-center">
-    <label for="id_source" class="form-label text-white fw-semibold">Job Source</label>
-  </div>
-  <div class="col-md-8">
-    <input type="text" name="source" id="id_source" class="form-control" placeholder="e.g., LinkedIn, Indeed" value="{{ form.source.value }}" style="background-color: #444; color: white;">
-  </div>
-</div>
+        <!-- Source Field -->
+        <div class="row mb-3">
+          <div class="col-md-4 d-flex align-items-center">
+            <label for="id_source" class="form-label text-white fw-semibold">Job Source</label>
+          </div>
+          <div class="col-md-8">
+            <input type="text" name="source" id="id_source" class="form-control" placeholder="e.g., LinkedIn, Indeed" value="{{ form.source.value }}" style="background-color: #444; color: white;">
+          </div>
+        </div>
 
         <!-- Application Date Field -->
         <div class="row mb-3">
           <div class="col-md-4 d-flex align-items-center">
-            <label for="id_application_date" class="form-label text-white fw-semibold">Application Date</label>
+            <label for="id_application_date" class="form-label text-white fw-semibold">
+              Application Date <span class="text-danger">*</span>
+            </label>
           </div>
           <div class="col-md-8">
-            <input type="date" name="date_applied" id="id_application_date" class="form-control" style="background-color: #444; color: white;" value="{{ form.application_date.value|default:today_date }}" ... required> 
+            <input type="date" name="date_applied" id="id_application_date" class="form-control" style="background-color: #444; color: white;" value="{{ form.application_date.value|default:today_date }}" required> 
           </div>
         </div>
 
@@ -113,18 +152,21 @@
         <!-- Status Field -->
         <div class="row mb-3">
           <div class="col-md-4 d-flex align-items-center">
-            <label for="id_status" class="form-label text-white fw-semibold">Status</label>
+            <label for="id_status" class="form-label text-white fw-semibold">
+              Status <span class="text-danger">*</span>
+            </label>
           </div>
           <div class="col-md-8">
             <select name="status" id="id_status" class="form-select" style="background-color: #444; color: white; border: 1px solid #666;" required>
-              {% comment %} <option disabled selected>Select current status</option> {% endcomment %}
               {% for value, label in form.status.field.choices %}
-                <option value="{{ value }}" {% if form.status.value == value %}selected{% endif %} style="background-color: #444; color: white;">{{ label }}</option>
+                <option value="{{ value }}" {% if form.status.value == value %}selected{% endif %} style="background-color: #444; color: white;">
+                  {{ label }}
+                </option>
               {% endfor %}
             </select>
           </div>
         </div>
-        
+
         <!-- Cover Letter Field -->
         <div class="row mb-3">
           <div class="col-md-4 d-flex align-items-center">
@@ -159,8 +201,18 @@
 <style>
   /* Style for hover and focus states */
   #id_status:hover, #id_status:focus {
-    background-color: #555;  /* Slightly lighter when hovered or focused */
+    background-color: #555;
     color: white;
     border-color: #888;
   }
 </style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const hasErrors = {{ form.errors|yesno:"true,false" }};
+    if (hasErrors) {
+      const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+      errorModal.show();
+    }
+  });
+</script>
