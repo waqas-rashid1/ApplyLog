@@ -43,13 +43,13 @@ class Application(models.Model):
     notes = models.TextField(blank=True)  # Additional Notes
     cover_letter = models.TextField(blank=True)  # Cover Letter
     resume = models.FileField(upload_to='resumes/', blank=True, null=True)  # Resume file upload
+    deadline = models.DateField(null=True, blank=True)  # Application Deadline
 
     def __str__(self):
         applicant_name = self.applicant.name if self.applicant else "No Applicant"
         job_title = self.job.title if self.job else "No Job"
         job_company = self.job.company if self.job else "No Company"
         return f"{applicant_name} - {job_title} at {job_company}"
-
 
 class Document(models.Model):
     DOCUMENT_TYPES = [

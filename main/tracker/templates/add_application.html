@@ -216,3 +216,37 @@
     }
   });
 </script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    setTimeout(function () {
+      const input = document.getElementById("id_website_link");
+
+      if (!input) {
+        console.error("❌ Input not found!");
+        return;
+      }
+
+      console.log("✅ Input found. Setting up listener...");
+
+      input.addEventListener("input", function () {
+        console.log("📥 URL entered:", input.value);
+        const link = input.value;
+        if (!link.startsWith("http")) return;
+
+        fetch(`/tracker/fetch-job-info/?url=${encodeURIComponent(link)}`)
+          .then(response => response.json())
+          .then(data => {
+            console.log("✅ Fetched job data:", data);
+            if (data.job_title) document.getElementById("id_position_applied").value = data.job_title;
+            if (data.company) document.getElementById("id_company_name").value = data.company;
+            if (data.deadline) document.getElementById("id_notes").value = `Deadline: ${data.deadline}`;
+            if (data.source) document.getElementById("id_source").value = data.source;
+          })
+          .catch(error => {
+            console.error("❌ Fetch error:", error);
+          });
+      });
+    }, 100); // small delay to ensure input is rendered
+  });
+</script>

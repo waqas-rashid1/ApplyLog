@@ -128,8 +128,8 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATIC_URL = '/static/'
-# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')] //removed for live web
-STATIC_ROOT = [os.path.join(BASE_DIR, 'static')] # Use a list for STATIC_ROOT to avoid issues with multiple directories
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')] #removed for live web
+# STATIC_ROOT = [os.path.join(BASE_DIR, 'static')] # Use a list for STATIC_ROOT to avoid issues with multiple directories
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

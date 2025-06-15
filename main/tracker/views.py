@@ -16,6 +16,8 @@ from django.db.models.functions import Now
 from django.contrib.auth.decorators import login_required
 from .models import SavedJob
 from .forms import SavedJobForm
+from .utils import fetch_job_details, detect_job_source
+
 
 def add_application(request):
     form = ApplicationForm()
@@ -404,3 +406,16 @@ def update_application_status(request, application_id):
             application.status = new_status
             application.save()
     return redirect('application_history')  # or wherever your table view is
+
+
+from django.http import JsonResponse
+from .utils import detect_job_source, fetch_job_details
+
+def fetch_job_info(request):
+    url = request.GET.get('url')
+    if not url:
+        return JsonResponse({"error": "Missing URL"}, status=400)
+
+    details = fetch_job_details(url)
+    details["source"] = detect_job_source(url)
+    return JsonResponse(details)
