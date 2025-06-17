@@ -19,7 +19,7 @@ class ApplicationForm(forms.ModelForm):
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
             'position_applied': forms.TextInput(attrs={'class': 'form-control'}),
             'company_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'resume': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'resume': forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': '.pdf,.doc,.docx'}),
         }
 
 class DocumentForm(forms.ModelForm):
@@ -30,7 +30,7 @@ class DocumentForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'required': 'required'}),
             'document_type': forms.Select(choices=Document.DOCUMENT_TYPES, attrs={'class': 'form-select', 'required': 'required'}),
-            'file': forms.ClearableFileInput(attrs={'class': 'form-control', 'required': 'required'}),
+            'file': forms.ClearableFileInput(attrs={'class': 'form-control', 'required': 'required', 'accept': '.pdf,.doc,.docx'}),
             'company_tag': forms.TextInput(attrs={'class': 'form-control', 'required': 'required'}),
             'job_role_tag': forms.TextInput(attrs={'class': 'form-control', 'required': 'required'}),
         }
