@@ -419,3 +419,91 @@ def fetch_job_info(request):
     details = fetch_job_details(url)
     details["source"] = detect_job_source(url)
     return JsonResponse(details)
+
+
+#matching score view
+import os
+import re
+import fitz  # PyMuPDF
+from .models import SavedJob
+from collections import Counter
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.core.files.storage import FileSystemStorage
+from sentence_transformers import SentenceTransformer, util
+
+model = SentenceTransformer('all-MiniLM-L6-v2')
+MIN_SCORE_THRESHOLD = 35
+
+# Extract a clean set of skill-related words from all job notes
+def get_dynamic_skill_keywords():
+    all_notes = " ".join(job.notes.lower() for job in SavedJob.objects.all() if job.notes)
+    words = re.findall(r'\b[a-zA-Z][a-zA-Z0-9.+#-]{1,}\b', all_notes)  # basic keyword filter
+    common = Counter(words).most_common(100)
+    return {word for word, freq in common if len(word) > 2}  # filter short/noise
+
+def extract_text_from_pdf(file_path):
+    with fitz.open(file_path) as doc:
+        return "\n".join(page.get_text() for page in doc)
+
+def extract_skills(text, skill_keywords):
+    text = text.lower()
+    return {skill for skill in skill_keywords if skill in text}
+
+def get_similarity(a, b):
+    a_emb = model.encode(a, convert_to_tensor=True)
+    b_emb = model.encode(b, convert_to_tensor=True)
+    return util.cos_sim(a_emb, b_emb)[0][0].item()
+
+def score_job(resume_text, resume_skills, job, skill_keywords):
+    job_title = job.job_title.strip()
+    job_desc = job.notes.strip() or job_title
+
+    # 1. Title similarity (30%)
+    title_score = get_similarity(job_title, resume_text) * 30
+
+    # 2. Skills match (40%)
+    job_keywords = extract_skills(job_desc, skill_keywords)
+    common_skills = resume_skills.intersection(job_keywords)
+    skill_score = (len(common_skills) / len(job_keywords) if job_keywords else 0) * 40
+
+    # 3. Experience/desc match (15%)
+    desc_score = get_similarity(job_desc, resume_text) * 15
+
+    # 4. Keyword frequency match (15%)
+    frequency_score = sum(resume_text.lower().count(skill) for skill in job_keywords)
+    freq_score = min(frequency_score, 10) / 10 * 15
+
+    total_score = title_score + skill_score + desc_score + freq_score
+    return round(total_score, 2)
+
+@csrf_exempt
+def upload_resume_and_match(request):
+    if request.method == 'POST' and request.FILES.get('resume'):
+        resume = request.FILES['resume']
+        fs = FileSystemStorage()
+        filename = fs.save(resume.name, resume)
+        file_path = fs.path(filename)
+
+        try:
+            resume_text = extract_text_from_pdf(file_path)
+            skill_keywords = get_dynamic_skill_keywords()
+            resume_skills = extract_skills(resume_text, skill_keywords)
+
+            results = []
+            for job in SavedJob.objects.all():
+                score = score_job(resume_text, resume_skills, job, skill_keywords)
+                if score >= MIN_SCORE_THRESHOLD:
+                    results.append({
+                        'title': job.job_title,
+                        'company': job.company,
+                        'notes': job.notes,
+                        'score': score
+                    })
+
+            results.sort(key=lambda x: x['score'], reverse=True)
+            return JsonResponse({'matches': results})
+        finally:
+            os.remove(file_path)
+
+    return JsonResponse({'error': 'No resume uploaded'}, status=400)

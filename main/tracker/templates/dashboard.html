@@ -1,26 +1,30 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block content %}
 
 <!-- Header Section -->
-<section class="d-flex align-items-center justify-content-center text-white" style="height: 100vh; background: linear-gradient(135deg, #0f0f0f, #1e1e1e, #2a2a2a);">
-  <div class="text-center">
-    <h1 class="display-4 fw-bold" style="color: #ffca2c;">Dashboard</h1>
-    <p class="lead text-light">Track, analyze and manage your application progress at a glance</p>
+<section
+  class="d-flex align-items-center justify-content-center text-white text-center"
+  style="min-height: 100vh; background: linear-gradient(135deg, #0f0f0f, #1e1e1e, #2a2a2a);"
+>
+  <div class="px-3">
+    <h1 class="display-4 fw-bold" style="color: #ffca2c">Dashboard</h1>
+    <p class="lead text-light">
+      Track, analyze and manage your application progress at a glance
+    </p>
   </div>
 </section>
 
-<!-- Stats + Charts Section -->
-<section class="py-5 px-4" style="min-height: 100vh; background-color: #121212;">
+<!-- Main Content -->
+<section class="py-5 px-3" style="background-color: #121212">
   <div class="container text-light">
 
     <!-- Quick KPIs -->
     <div class="row text-center mb-5">
       {% for stat in kpis %}
-      <div class="col-md-3 mb-3">
-        <div class="p-4 bg-dark rounded-3 shadow-sm">
-          <h5>{{ stat.label }}</h5>
+      <div class="col-6 col-md-3 mb-3">
+        <div class="p-4 bg-dark rounded-3 shadow-sm h-100">
+          <h6 class="small">{{ stat.label }}</h6>
           <h2 style="color: {{ stat.color }};">{{ stat.value }}</h2>
         </div>
       </div>
@@ -30,15 +34,15 @@
     <!-- Charts -->
     <div class="row mb-5">
       <div class="col-md-6 mb-4">
-        <div class="bg-dark p-4 rounded-3 shadow-sm">
-          <h5 class="text-center">Status Distribution</h5>
-          <canvas id="pieChart" height="200"></canvas>
+        <div class="bg-dark p-4 rounded-3 shadow-sm h-100">
+          <h5 class="text-center mb-3">Status Distribution</h5>
+          <canvas id="pieChart" style="max-width: 100%; height: auto;"></canvas>
         </div>
       </div>
       <div class="col-md-6 mb-4">
-        <div class="bg-dark p-4 rounded-3 shadow-sm">
-          <h5 class="text-center">Monthly Applications</h5>
-          <canvas id="lineChart" height="200"></canvas>
+        <div class="bg-dark p-4 rounded-3 shadow-sm h-100">
+          <h5 class="text-center mb-3">Monthly Applications</h5>
+          <canvas id="lineChart" style="max-width: 100%; height: auto;"></canvas>
         </div>
       </div>
     </div>
@@ -49,40 +53,77 @@
         <div class="bg-dark p-4 rounded-3 shadow-sm">
           <h5>📊 Quick Insights</h5>
           <ul class="list-group list-group-flush text-light">
-            <li class="list-group-item bg-dark border-secondary">📆 <strong>{{ insights.active_month }}</strong> brought the hustle – your busiest month yet!</li>
-            <li class="list-group-item bg-dark border-secondary">⏱️ On average, responses rolled in after <strong>{{ insights.avg_response_time }} days</strong>.</li>
-            <li class="list-group-item bg-dark border-secondary">🌍 You shined in <strong>{{ insights.best_category }}</strong> – top success rate there!</li>
-            <li class="list-group-item bg-dark border-secondary">🎯 You’ve crushed <strong>{{ insights.goal_completion }}%</strong> of your application goals – keep pushing!</li>
+            <li class="list-group-item bg-dark border-secondary">
+              📆 <strong>{{ insights.active_month }}</strong> brought the hustle – your busiest month yet!
+            </li>
+            <li class="list-group-item bg-dark border-secondary">
+              ⏱️ On average, responses rolled in after <strong>{{ insights.avg_response_time }} days</strong>.
+            </li>
+            <li class="list-group-item bg-dark border-secondary">
+              🌍 You shined in <strong>{{ insights.best_category }}</strong> – top success rate there!
+            </li>
+            <li class="list-group-item bg-dark border-secondary">
+              🎯 You’ve crushed <strong>{{ insights.goal_completion }}%</strong> of your application goals – keep pushing!
+            </li>
           </ul>
         </div>
       </div>
     </div>
 
     <!-- Recent Applications -->
-    <div class="row">
+    <div class="row mb-5">
       <div class="col">
         <div class="bg-dark p-4 rounded-3 shadow-sm">
           <h5>Recent Applications</h5>
-          <table class="table table-dark table-bordered table-hover mt-3">
-            <thead>
-              <tr>
-                <th>Company</th>
-                <th>Position</th>
-                <th>Status</th>
-                <th>Applied On</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for app in recent_applications %}
-              <tr>
-                <td>{{ app.company }}</td>
-                <td>{{ app.position }}</td>
-                <td><span class="badge bg-{{ app.status_class }}">{{ app.status }}</span></td>
-                <td>{{ app.date }}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+          <div class="table-responsive mt-3">
+            <table class="table table-dark table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th>Company</th>
+                  <th>Position</th>
+                  <th>Status</th>
+                  <th>Applied On</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for app in recent_applications %}
+                <tr>
+                  <td>{{ app.company }}</td>
+                  <td>{{ app.position }}</td>
+                  <td><span class="badge bg-{{ app.status_class }}">{{ app.status }}</span></td>
+                  <td>{{ app.date }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resume Match Scores -->
+    <div class="row mb-5">
+      <div class="col">
+        <div class="bg-dark p-4 rounded-3 shadow-sm">
+          <h5 class="mb-4">Resume Match Scores <span style="color:red">*</span></h5>
+          <form id="resumeForm" enctype="multipart/form-data">
+            <input type="file" name="resume" class="form-control mb-3" required />
+            <button type="submit" class="btn btn-warning">Upload & Match</button>
+          </form>
+
+          <div class="table-responsive mt-4" id="matchTableWrapper" style="display: none;">
+            <table class="table table-dark table-bordered table-hover" id="matchTable">
+              <thead>
+                <tr>
+                  <th>Job Title</th>
+                  <th>Company</th>
+                  <th>Notes</th>
+                  <th>Match Score (%)</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -90,7 +131,7 @@
   </div>
 </section>
 
-<!-- Charts Scripts -->
+<!-- Chart Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
   const pieCtx = document.getElementById('pieChart').getContext('2d');
@@ -135,6 +176,40 @@
       plugins: {
         legend: { labels: { color: 'white' } }
       }
+    }
+  });
+</script>
+
+<!-- Resume Match Script -->
+<script>
+  document.getElementById("resumeForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+
+    const response = await fetch("/tracker/resume-match/", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+    const tableWrapper = document.getElementById("matchTableWrapper");
+    const tbody = document.querySelector("#matchTable tbody");
+    tbody.innerHTML = "";
+
+    if (data.matches) {
+      data.matches.forEach((match) => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${match.title}</td>
+            <td>${match.company}</td>
+            <td>${match.notes}</td>
+            <td><span class="badge bg-info">${match.score}</span></td>
+          </tr>
+        `;
+      });
+      tableWrapper.style.display = "block";
+    } else {
+      alert("Error matching resume");
     }
   });
 </script>

@@ -13,4 +13,5 @@ urlpatterns = [
     path('job/applied/<int:job_id>/', views.mark_job_applied, name='mark_job_applied'),
     path('update-status/<int:application_id>/', views.update_application_status, name='update_application_status'),
     path("fetch-job-info/", views.fetch_job_info, name="fetch_job_info"),
+    path('resume-match/', views.upload_resume_and_match, name='resume_match'),
 ] 
