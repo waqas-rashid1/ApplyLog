@@ -85,6 +85,65 @@
         transform: rotate(180deg);
       }
     </style>
+   
+    <style>
+      .floating-contact {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #ffca2c;
+        color: #000;
+        padding: 10px 16px;
+        border-radius: 50px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: 600;
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        z-index: 9999;
+        transition: background 0.3s ease;
+      }
+
+      .floating-contact:hover {
+        background-color: #ffc107;
+      }
+
+      .floating-form {
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        width: 280px;
+        background-color: #1f1f1f;
+        color: #fff;
+        border-radius: 12px;
+        padding: 16px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        display: none;
+        z-index: 10000;
+      }
+
+      .floating-form .form-control {
+        background-color: #2c2c2c;
+        border: 1px solid #444;
+        color: #fff;
+      }
+
+      .floating-form .form-control::placeholder {
+        color: #bbb;
+      }
+
+      .floating-form .btn-close {
+        background-color: #fff;
+        opacity: 1;
+      }
+
+      .form-header {
+        border-bottom: 1px solid #333;
+        padding-bottom: 6px;
+        margin-bottom: 12px;
+      }
+    </style>
   </head>
   <body>
     <!-- Navbar -->
@@ -176,9 +235,32 @@
     {% endblock %}
 
     <!-- Floating Contact Widget -->
-    <div class="floating-contact" onclick="scrollToForm()">
+    <div class="floating-contact" onclick="toggleContactForm()">
       <i class="bi bi-chat-left-text-fill fs-5"></i>
       <span>Message Us</span>
+    </div>
+
+    <!-- Floating Contact Form -->
+    <div class="floating-form" id="floatingForm">
+      <div class="form-header d-flex justify-content-between align-items-center mb-2">
+        <strong>Contact Us</strong>
+        <button onclick="toggleContactForm()" class="btn-close btn-close-white" aria-label="Close"></button>
+      </div>
+      <form action="https://formsubmit.co/waqasdotdev@gmail.com" method="POST">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_next" value="https://yourdomain.com/thank-you">
+
+        <div class="mb-2">
+          <input type="text" name="name" class="form-control form-control-sm" placeholder="Your Name" required />
+        </div>
+        <div class="mb-2">
+          <input type="email" name="email" class="form-control form-control-sm" placeholder="Your Email" required />
+        </div>
+        <div class="mb-2">
+          <textarea name="message" rows="3" class="form-control form-control-sm" placeholder="Your Message" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-warning btn-sm w-100">Send</button>
+      </form>
     </div>
 
     <!-- Footer -->
@@ -195,5 +277,11 @@
         </small>
       </div>
     </footer>
+    <script>
+    function toggleContactForm() {
+      const form = document.getElementById("floatingForm");
+      form.style.display = form.style.display === "block" ? "none" : "block";
+    }
+  </script>
   </body>
 </html>
