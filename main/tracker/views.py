@@ -507,3 +507,103 @@ def upload_resume_and_match(request):
             os.remove(file_path)
 
     return JsonResponse({'error': 'No resume uploaded'}, status=400)
+
+
+# live job feed views
+import logging
+import requests
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET
+
+logger = logging.getLogger(__name__)
+
+RAPIDAPI_KEY = "ac0fa29d81mshbb893cbbbbf1eb5p15b4abjsn486de655cb57"
+
+@require_GET
+def live_job_list(request):
+    title = request.GET.get("title", "").strip()
+    if not title:
+        return JsonResponse({"error": "Please provide a job title"}, status=400)
+
+    try:
+        url = "https://jsearch.p.rapidapi.com/search"
+        headers = {
+            "X-RapidAPI-Key": RAPIDAPI_KEY,
+            "X-RapidAPI-Host": "jsearch.p.rapidapi.com"
+        }
+        params = {
+            "query": title,
+            "page": "1",
+            "num_pages": "1"
+        }
+
+        response = requests.get(url, headers=headers, params=params, timeout=10)
+
+        logger.info(f"Status Code: {response.status_code}")
+        logger.debug(f"Raw response: {response.text[:300]}")
+
+        if response.status_code != 200:
+            return JsonResponse({
+                "error": "API request failed",
+                "status": response.status_code
+            }, status=response.status_code)
+
+        data = response.json()
+        jobs = []
+
+        for job in data.get("data", [])[:10]:
+            jobs.append({
+                "title": job.get("job_title", "N/A"),
+                "company": job.get("employer_name", "N/A"),
+                "location": job.get("job_city", "Remote"),
+                "link": job.get("job_apply_link", "#")
+            })
+
+        return JsonResponse({"results": jobs})
+    except Exception as e:
+        logger.error(f"Job fetch error: {str(e)}", exc_info=True)
+        return JsonResponse({
+            "error": "Job API failed",
+            "details": str(e)
+        }, status=500)
+
+def live_job_list_view(request):
+    return render(request, 'jobs_list.html')
+
+
+#smart suggestions according to job title of wishlist
+import requests
+from django.http import JsonResponse
+from .models import SavedJob
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def smart_suggestions_all(request):
+    user = request.user
+    saved_titles = SavedJob.objects.filter(user=user).values_list('job_title', flat=True).distinct()
+
+    suggestions = []
+    headers = {
+        "x-rapidapi-key": "ac0fa29d81mshbb893cbbbbf1eb5p15b4abjsn486de655cb57",
+        "x-rapidapi-host": "jsearch.p.rapidapi.com"
+    }
+
+    for title in saved_titles:
+        url = f"https://jsearch.p.rapidapi.com/search?query={title}&page=1&num_pages=1"
+        try:
+            response = requests.get(url, headers=headers, timeout=10)
+            if response.status_code == 200:
+                data = response.json()
+                for job in data.get("data", []):
+                    suggestions.append({
+                        "title": job.get("job_title"),
+                        "company": job.get("employer_name"),
+                        "location": job.get("job_city") or job.get("job_country") or "N/A",
+                        "link": job.get("job_apply_link"),
+                        "source": "RapidAPI"
+                    })
+        except Exception as e:
+            print(f"Error fetching jobs for title '{title}':", str(e))
+            continue
+
+    return JsonResponse({"suggestions": suggestions})

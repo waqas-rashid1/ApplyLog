@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Header Section -->
+<section class="d-flex align-items-center justify-content-center text-white" style="height: 100vh; background: linear-gradient(135deg, #0f0f0f, #1e1e1e, #2a2a2a);">
+  <div class="text-center">
+    <h1 class="display-4 fw-bold" style="color: #ffca2c;">Job Feed</h1>
+    <p class="lead text-light">Discover the latest job opportunities curated for you and explore detailed listings that match your interests.</p>
+  </div>
+</section>
+
+<!-- Live Job Feed -->
+<section class="py-5 px-4" style="background-color: #111;">
+  <div class="container text-light">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h4 class="mb-0 text-warning">Live Job Feed</h4>
+      <form id="live-job-search" class="d-flex gap-2">
+        <input type="text" id="live-job-title" placeholder="Enter job title..." class="form-control bg-dark text-light border border-secondary rounded-3" style="max-width: 300px;">
+        <button type="submit" class="btn btn-warning">Search</button>
+      </form>
+    </div>
+
+    <div class="table-responsive rounded-4">
+      <table class="table align-middle text-light" style="background-color: #1a1a1a; border-radius: 12px;" id="live-jobs-table">
+        <thead class="text-warning" style="background-color: #2a2a2a;">
+          <tr>
+            <th class="py-3 px-4">Title</th>
+            <th class="py-3 px-4">Company</th>
+            <th class="py-3 px-4">Location</th>
+            <th class="py-3 px-4">Link</th>
+          </tr>
+        </thead>
+        <tbody id="live-jobs-body">
+          <tr><td colspan="4" class="text-center py-4">Enter a job title and search to see results.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.getElementById("live-job-search").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const title = document.getElementById("live-job-title").value.trim();
+    const tbody = document.getElementById("live-jobs-body");
+
+    if (!title) {
+      alert("Please enter a job title.");
+      return;
+    }
+
+    tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4">Searching for "${title}"...</td></tr>`;
+
+    fetch(`/tracker/jobs/?title=${encodeURIComponent(title)}`)
+      .then(response => {
+        if (!response.ok) throw new Error("API failed");
+        return response.json();
+      })
+      .then(data => {
+        const jobs = data.results || [];
+        if (jobs.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4">⚠️ No results found for "${title}".</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = jobs.map(job => `
+          <tr>
+            <td class="py-3 px-4">${escapeHtml(job.title || 'N/A')}</td>
+            <td class="py-3 px-4">${escapeHtml(job.company || 'N/A')}</td>
+            <td class="py-3 px-4">${escapeHtml(job.location || 'N/A')}</td>
+            <td class="py-3 px-4">
+              <a href="${job.link}" target="_blank" class="btn btn-sm btn-outline-warning rounded-3">🔗 View</a>
+            </td>
+          </tr>
+        `).join("");
+      })
+      .catch(error => {
+        console.error(error);
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center text-danger py-4">🚫 Failed to fetch jobs. Please try again later.</td></tr>`;
+      });
+  });
+
+  function escapeHtml(unsafe) {
+    return unsafe
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+</script>
+
+{% endblock %}

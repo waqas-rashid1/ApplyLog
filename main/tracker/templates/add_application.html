@@ -146,6 +146,12 @@
           </div>
           <div class="col-md-8">
             <input type="file" name="resume" id="id_resume" class="form-control" style="background-color: #444; color: white;">
+
+            {% if form.resume.errors %}
+              <div class="text-danger small mt-1">
+                {{ form.resume.errors.0 }}
+              </div>
+            {% endif %}
           </div>
         </div>
 

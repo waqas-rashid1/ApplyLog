@@ -14,4 +14,9 @@ urlpatterns = [
     path('update-status/<int:application_id>/', views.update_application_status, name='update_application_status'),
     path("fetch-job-info/", views.fetch_job_info, name="fetch_job_info"),
     path('resume-match/', views.upload_resume_and_match, name='resume_match'),
+    # path('smart-suggestions/<int:job_id>/', views.smart_suggestions, name='smart_suggestions'),
+    # path('smart-suggestions-by-title/', views.smart_suggestions_by_title, name='smart_suggestions_by_title'),
+    path("jobs/", views.live_job_list, name="live_job_list"),
+    path('live-jobs/', views.live_job_list_view, name='live_job_list'),
+    path('smart-suggestions-all/', views.smart_suggestions_all, name='smart_suggestions_all'),
 ] 

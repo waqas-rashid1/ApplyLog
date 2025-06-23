@@ -1,5 +1,6 @@
 # forms.py
 from django import forms
+from django.core.exceptions import ValidationError
 from .models import Application
 from .models import Document
 from .models import SavedJob
@@ -21,7 +22,7 @@ class ApplicationForm(forms.ModelForm):
             'company_name': forms.TextInput(attrs={'class': 'form-control'}),
             'resume': forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': '.pdf,.doc,.docx'}),
         }
-
+    
 class DocumentForm(forms.ModelForm):
     class Meta:
         model = Document
@@ -39,6 +40,28 @@ class DocumentForm(forms.ModelForm):
         super(DocumentForm, self).__init__(*args, **kwargs)
         for field in self.fields.values():
             field.required = True
+
+    def clean_file(self):
+        file = self.cleaned_data.get('file')
+
+        if not file:
+            raise ValidationError("Please upload a file.")
+
+        # ✅ File size check (5MB max)
+        max_size = 5 * 1024 * 1024  # 5 MB
+        if file.size > max_size:
+            raise ValidationError("File size must be less than 5 MB.")
+
+        # ✅ MIME type check
+        allowed_types = [
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        ]
+        if file.content_type not in allowed_types:
+            raise ValidationError("Only PDF, DOC, or DOCX files are allowed.")
+
+        return file
 
 class SavedJobForm(forms.ModelForm):
     class Meta:

@@ -55,6 +55,9 @@
             Select File <span class="text-danger">*</span>
           </label>
           <div class="mt-1">{{ form.file }}</div>
+          {% if form.file.errors %}
+          <div class="text-danger small">{{ form.file.errors.0 }}</div>
+          {% endif %}
         </div>
 
         <button type="submit" class="btn btn-warning w-100">Upload Document</button>

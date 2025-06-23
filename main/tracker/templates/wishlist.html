@@ -8,40 +8,40 @@
 <section class="d-flex align-items-center justify-content-center text-white" style="height: 100vh; background: linear-gradient(135deg, #0f0f0f, #1e1e1e, #2a2a2a);">
   <div class="text-center">
     <h1 class="display-4 fw-bold" style="color: #ffca2c;">Job Wishlist</h1>
-    <p class="lead text-light">Keep track of exciting opportunities you're aiming for.</p>
+    <p class="lead text-light">Save jobs you're eyeing and explore smart suggestions powered by AI!</p>
   </div>
 </section>
 
-<!-- Main Content -->
+<!-- Main Section -->
 <section class="py-5 px-4" style="background-color: #121212;">
   <div class="container text-light">
 
     <!-- Add Job Form -->
     <div class="bg-dark p-4 rounded-3 mb-5 shadow-sm">
       <h4 class="mb-4" style="color: #ffca2c;">Add New Job</h4>
-      <form method="POST">
+      <form method="POST" id="job-form">
         {% csrf_token %}
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label for="id_job_title" class="form-label">Job Title <span class="text-danger">*</span> </label>
+            <label class="form-label">Job Title <span class="text-danger">*</span></label>
             {{ form.job_title|add_class:"form-control bg-dark text-light border border-secondary rounded-3" }}
           </div>
           <div class="col-md-6 mb-3">
-            <label for="id_company" class="form-label">Company <span class="text-danger">*</span> </label>
+            <label class="form-label">Company <span class="text-danger">*</span></label>
             {{ form.company|add_class:"form-control bg-dark text-light border border-secondary rounded-3" }}
           </div>
         </div>
         <div class="mb-3">
-          <label for="id_job_link" class="form-label">Job Link <span class="text-danger">*</span> </label>
+          <label class="form-label">Job Link <span class="text-danger">*</span></label>
           {{ form.job_link|add_class:"form-control bg-dark text-light border border-secondary rounded-3" }}
         </div>
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label for="id_deadline" class="form-label">Deadline <span class="text-danger">*</span></label>
+            <label class="form-label">Deadline <span class="text-danger">*</span></label>
             {{ form.deadline|add_class:"form-control bg-dark text-light border border-secondary rounded-3" }}
           </div>
           <div class="col-md-6 mb-3">
-            <label for="id_notes" class="form-label">Job Description / Role Notes <small class="text-muted">(used for resume matching)</small></label>
+            <label class="form-label">Job Notes / Description</label>
             {{ form.notes|add_class:"form-control bg-dark text-light border border-secondary rounded-3" }}
           </div>
         </div>
@@ -50,59 +50,177 @@
     </div>
 
     <!-- Saved Jobs Table -->
-    <div class="table-responsive">
-        <table class="table align-middle text-light" style="background-color: #1a1a1a; border-radius: 12px; overflow: hidden;">
+    <div class="bg-dark p-4 rounded-3 mb-5 shadow-sm">
+      <h4 class="mb-3" style="color: #ffca2c;">Your Saved Jobs</h4>
+      <input id="wishlistSearch" type="text" class="form-control mb-3 bg-dark text-light border-secondary rounded-3" placeholder="Search saved jobs...">
+      <div class="table-responsive">
+        <table class="table align-middle text-light table-hover rounded-3 overflow-hidden" style="background-color: #1a1a1a;" id="wishlist-table">
           <thead class="text-warning" style="background-color: #2a2a2a;">
             <tr>
-              <th class="py-3 px-4">Title</th>
-              <th class="py-3 px-4">Company</th>
-              <th class="py-3 px-4">Link</th>
-              <th class="py-3 px-4">Deadline</th>
-              <th class="py-3 px-4">Notes</th>
-              <th class="py-3 px-4">Status</th>
-              <th class="py-3 px-4">Actions</th>
+              <th>Title</th>
+              <th>Company</th>
+              <th>Link</th>
+              <th>Deadline</th>
+              <th>Status</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {% for job in saved_jobs %}
-            <tr style="background-color: {% if job.applied %}#1e2a1e{% else %}#1a1a1a{% endif %}; border-bottom: 1px solid #2e2e2e;">
-              <td class="py-3 px-4">{{ job.job_title }}</td>
-              <td class="py-3 px-4">{{ job.company }}</td>
-              <td class="py-3 px-4">
-                <a href="{{ job.job_link }}" target="_blank" class="btn btn-sm btn-outline-warning rounded-3">🔗 View</a>
-              </td>
-              <td class="py-3 px-4">{{ job.deadline|default:"-" }}</td>
-              <td class="py-3 px-4">{{ job.notes|default:"-" }}</td>
-              <td class="py-3 px-4">
+            <tr style="background-color: {% if job.applied %}#1e2a1e{% else %}#1a1a1a{% endif %};">
+              <td>{{ job.job_title }}</td>
+              <td>{{ job.company }}</td>
+              <td><a href="{{ job.job_link }}" target="_blank" class="btn btn-sm btn-outline-warning rounded-3">🔗 View</a></td>
+              <td>{{ job.deadline|date:"M d, Y"|default:"-" }}</td>
+              <td>
                 {% if job.applied %}
-                  <span class="badge rounded-3 bg-success px-3 py-2">✅ Applied</span>
+                  <span class="badge bg-success rounded-pill px-3 py-2">✅ Applied</span>
                 {% else %}
-                  <span class="badge rounded-3 bg-secondary px-3 py-2">⏳ Pending</span>
+                  <span class="badge bg-secondary rounded-pill px-3 py-2">⏳ Pending</span>
                 {% endif %}
               </td>
-              <td class="py-3 px-4">
-                <div class="d-flex flex-wrap gap-2">
+              <td>
+                <div class="d-flex gap-2 flex-wrap">
+                  <button class="btn btn-sm btn-outline-light rounded-3" onclick="viewDetails(`{{ job.job_title|escapejs }}`, `{{ job.company|escapejs }}`, '{{ job.job_link }}', '{{ job.deadline|date:"M d, Y" }}', `{{ job.notes|linebreaksbr }}`)">👁 View</button>
                   {% if not job.applied %}
-                    <a href="{% url 'mark_job_applied' job.id %}" class="btn btn-sm btn-outline-success rounded-3">✅ Mark as Applied</a>
+                    <a href="{% url 'mark_job_applied' job.id %}" class="btn btn-sm btn-outline-success rounded-3">✅ Applied</a>
                   {% endif %}
                   <a href="{% url 'delete_saved_job' job.id %}" class="btn btn-sm btn-outline-danger rounded-3">🗑 Delete</a>
                 </div>
               </td>
             </tr>
+            {% empty %}
+            <tr><td colspan="6" class="text-center py-4">No jobs saved yet.</td></tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
+    </div>
+
+    <!-- Smart Suggestions Based on Wishlist -->
+    <div class="bg-dark p-4 rounded-3 mb-5 shadow-sm">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="text-warning mb-0">Smart Suggestions Based on Your Wishlist</h4>
+        <button class="btn btn-sm btn-outline-warning rounded-3" onclick="loadAllSuggestions()">Refresh</button>
+      </div>
+      <input id="suggestionSearch" type="text" class="form-control mb-3 bg-dark text-light border-secondary rounded-3" placeholder="Search suggestions...">
+      <div class="table-responsive">
+        <table class="table align-middle text-light table-hover rounded-3 overflow-hidden" style="background-color: #1a1a1a;" id="all-suggestions-table">
+          <thead class="text-warning" style="background-color: #2a2a2a;">
+            <tr>
+              <th>Title</th>
+              <th>Company</th>
+              <th>Location</th>
+              <th>Link</th>
+            </tr>
+          </thead>
+          <tbody id="all-suggestions-body">
+            <tr>
+              <td colspan="4" class="text-center py-4">Click "Refresh" to explore recommendations based on your wishlist.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
   </div>
 </section>
 
-{% endblock %}
+<!-- Modal -->
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content bg-dark text-light rounded-4">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title">Job Details</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Title:</strong> <span id="detailsTitle"></span></p>
+        <p><strong>Company:</strong> <span id="detailsCompany"></span></p>
+        <p><strong>Deadline:</strong> <span id="detailsDeadline"></span></p>
+        <p><strong>Link:</strong> <a href="#" id="detailsLink" target="_blank">🔗 Open</a></p>
+        <p><strong>Notes:</strong><br><span id="detailsNotes"></span></p>
+      </div>
+    </div>
+  </div>
+</div>
 
-<style>
-    .form-control:focus {
-      border-color: #ffca2c !important;
-      box-shadow: 0 0 0 0.2rem rgba(255, 202, 44, 0.25);
+<!-- Script -->
+<script>
+  function escapeHtml(text) {
+    return text.replace(/&/g, "&amp;")
+               .replace(/</g, "&lt;")
+               .replace(/>/g, "&gt;")
+               .replace(/"/g, "&quot;")
+               .replace(/'/g, "&#039;");
+  }
+
+  function viewDetails(title, company, link, deadline, notes) {
+    document.getElementById("detailsTitle").textContent = title;
+    document.getElementById("detailsCompany").textContent = company;
+    document.getElementById("detailsDeadline").textContent = deadline;
+    document.getElementById("detailsLink").href = link;
+    document.getElementById("detailsNotes").innerHTML = notes;
+    new bootstrap.Modal(document.getElementById("detailsModal")).show();
+  }
+
+  function loadAllSuggestions() {
+    const body = document.getElementById("all-suggestions-body");
+    body.innerHTML = `<tr><td colspan="4" class="text-center py-4">⏳ Loading smart job suggestions...</td></tr>`;
+    fetch("/tracker/smart-suggestions-all/")
+      .then(res => res.json())
+      .then(data => {
+        const suggestions = data.suggestions || [];
+        if (suggestions.length === 0) {
+          body.innerHTML = `<tr><td colspan="4" class="text-center py-4">⚠️ No suggestions found.</td></tr>`;
+          return;
+        }
+        let rows = "";
+        suggestions.forEach(job => {
+          rows += `
+            <tr>
+              <td>${escapeHtml(job.title || 'N/A')}</td>
+              <td>${escapeHtml(job.company || 'N/A')}</td>
+              <td>${escapeHtml(job.location || 'N/A')}</td>
+              <td><a href="${job.link}" target="_blank" class="btn btn-sm btn-outline-warning">🔗 View</a></td>
+            </tr>
+          `;
+        });
+        body.innerHTML = rows;
+      })
+      .catch(() => {
+        body.innerHTML = `<tr><td colspan="4" class="text-center text-danger py-4">🚫 Failed to load suggestions.</td></tr>`;
+      });
+  }
+
+  // Search functionality
+  document.getElementById("wishlistSearch").addEventListener("input", function() {
+    const input = this.value.toLowerCase();
+    document.querySelectorAll("#wishlist-table tbody tr").forEach(row => {
+      const rowText = row.textContent.toLowerCase();
+      row.style.display = rowText.includes(input) ? "" : "none";
+    });
+  });
+
+  document.getElementById("suggestionSearch").addEventListener("input", function() {
+    const input = this.value.toLowerCase();
+    document.querySelectorAll("#all-suggestions-table tbody tr").forEach(row => {
+      const rowText = row.textContent.toLowerCase();
+      row.style.display = rowText.includes(input) ? "" : "none";
+    });
+  });
+
+  // Validate form
+  document.getElementById('job-form').addEventListener('submit', function(e) {
+    const requiredFields = ['id_job_title', 'id_company', 'id_job_link'];
+    for (let id of requiredFields) {
+      if (!document.getElementById(id).value.trim()) {
+        e.preventDefault();
+        alert("Please fill all required fields.");
+        return;
+      }
     }
-</style>
-  
+  });
+</script>
+
+{% endblock %}
