@@ -24,7 +24,7 @@
   });
 </script>
 
-<!-- Header Section -->
+<!-- Header -->
 <section class="d-flex align-items-center justify-content-center text-white" style="height: 100vh; background: linear-gradient(135deg, #0f0f0f, #1e1e1e, #2a2a2a);">
   <div class="text-center">
     <h1 class="display-4 fw-bold" style="color: #ffca2c;">Application History</h1>
@@ -32,18 +32,18 @@
   </div>
 </section>
 
-<!-- Main Content Section -->
-<section class="py-5" style="background-color: #2a2a2a; min-height: calc(100vh - 120px);">
+<!-- Main Section -->
+<section class="py-5" style="background-color: #121212; min-height: calc(100vh - 120px);">
   <div class="container">
-    <div class="card shadow-lg border-0 rounded-4 p-4" style="background-color: #333; color: white;">
-      
-      <!-- Filter and Search -->
+    <div class="bg-dark p-4 rounded-4 shadow-sm">
+
+      <!-- Filters -->
       <div class="row mb-4">
         <div class="col-md-4">
-          <input type="text" class="form-control" placeholder="Search by Name or Position" id="search" style="background-color: #444; color: white;">
+          <input type="text" class="form-control bg-dark text-light border border-secondary rounded-3" placeholder="Search by Name or Position" id="search">
         </div>
         <div class="col-md-4">
-          <select class="form-select" id="status-filter" style="background-color: #444; color: white;">
+          <select class="form-select bg-dark text-light border border-secondary rounded-3" id="status-filter">
             <option value="">All Statuses</option>
             {% for key, value in applications.first.STATUS_CHOICES %}
               <option value="{{ key }}">{{ value }}</option>
@@ -51,108 +51,109 @@
           </select>
         </div>
         <div class="col-md-4 text-center">
-          <button class="btn btn-primary px-4 py-2" id="filter-btn">Apply Filters</button>
+          <button class="btn btn-warning px-4 py-2 w-100 rounded-3" id="filter-btn">Apply Filters</button>
         </div>
       </div>
 
-      <!-- Application Table -->
-      <div class="table-responsive">
-        <table class="table table-dark table-striped">
-          <thead>
+      <!-- Table -->
+      <div class="table-responsive mb-5">
+        <table class="table align-middle text-light" style="background-color: #1a1a1a; border-radius: 12px; overflow: hidden;">
+          <thead class="text-warning" style="background-color: #2a2a2a;">
             <tr>
-              <th>Applicant Name</th>
-              <th>Position</th>
-              <th>Company</th>
-              <th>Date Applied</th>
-              <th>Status</th>
-              <th class="text-center">Actions</th>
+              <th class="py-3 px-4">Applicant Name</th>
+              <th class="py-3 px-4">Position</th>
+              <th class="py-3 px-4">Company</th>
+              <th class="py-3 px-4">Date Applied</th>
+              <th class="py-3 px-4">Status</th>
+              <th class="py-3 px-4 text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
             {% for application in applications %}
-              <tr data-status="{{ application.status }}">
-                <td>{{ application.applicant.name }}</td>
-                <td>{{ application.job.title }}</td>
-                <td>{{ application.job.company }}</td>
-                <td>{{ application.date_applied }}</td>
-                <td>{{ application.get_status_display }}</td>
-                <td class="text-center">
-                  <div class="d-flex flex-column gap-1 align-items-center align-items-md-start">
-                    <!-- View Details Button -->
-                    <button class="btn btn-info btn-sm" data-bs-toggle="modal" title="View application details" data-bs-target="#appModal{{ application.id }}">
-                      View
-                    </button>
+            <tr style="background-color: #1a1a1a; border-bottom: 1px solid #2e2e2e;" data-status="{{ application.status }}">
+              <td class="py-3 px-4">{{ application.applicant.name }}</td>
+              <td class="py-3 px-4">{{ application.job.title }}</td>
+              <td class="py-3 px-4">{{ application.job.company }}</td>
+              <td class="py-3 px-4">{{ application.date_applied }}</td>
+              <td class="py-3 px-4">{{ application.get_status_display }}</td>
+              <td class="py-3 px-4 text-center">
+                <div class="d-flex flex-column gap-2 align-items-center align-items-md-start">
+                  <!-- View Modal -->
+                  <button class="btn btn-sm btn-outline-info rounded-3" data-bs-toggle="modal" title="View application details" data-bs-target="#appModal{{ application.id }}">
+                    👁 View
+                  </button>
 
-                    <!-- Dropdown for Update Status -->
-                    {% if application.id %}
-                      <div class="dropdown">
-                        <button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          Update Status
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-dark p-2" style="min-width: 220px;">
-                          <form method="POST" action="{% url 'update_application_status' application.id %}">
-                            {% csrf_token %}
-                            <div class="form-group mb-2">
-                              <select name="status" class="form-select form-select-sm">
-                                {% for key, value in application.STATUS_CHOICES %}
-                                  <option value="{{ key }}" {% if application.status == key %}selected{% endif %}>{{ value }}</option>
-                                {% endfor %}
-                              </select>
-                            </div>
-                            <button type="submit" class="btn btn-sm btn-light w-100">Save</button>
-                          </form>
-                        </ul>
-                      </div>
-                    {% else %}
-                      <span class="text-muted">Invalid ID</span>
-                    {% endif %}
+                  <!-- Update Status -->
+                  {% if application.id %}
+                  <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-warning dropdown-toggle rounded-3" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      🔄 Update
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark p-3 rounded-3 shadow-sm" style="min-width: 240px;">
+                      <form method="POST" action="{% url 'update_application_status' application.id %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                          <label class="form-label mb-1">Select New Status</label>
+                          <select name="status" class="form-select form-select-sm bg-dark text-light border-secondary rounded-3">
+                            {% for key, value in application.STATUS_CHOICES %}
+                              <option value="{{ key }}" {% if application.status == key %}selected{% endif %}>{{ value }}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-light w-100 rounded-3">💾 Save</button>
+                      </form>
+                    </ul>
                   </div>
-                </td>
-              </tr>
+                  {% else %}
+                  <span class="text-muted">Invalid ID</span>
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
 
-      <!-- Modals (Placed outside table) -->
+      <!-- Modals -->
       {% for application in applications %}
-        <div class="modal fade" id="appModal{{ application.id }}" tabindex="-1" aria-labelledby="modalLabel{{ application.id }}" aria-hidden="true">
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content" style="background-color: #333; color: white;">
-              <div class="modal-header">
-                <h5 class="modal-title" id="modalLabel{{ application.id }}">Application Details</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <h4>{{ application.applicant.name }}</h4>
-                <p><strong>Email:</strong> {{ application.applicant.email }}</p>
-                <p><strong>Phone:</strong> {{ application.applicant.phone }}</p>
-                <hr>
-                <p><strong>Job Title:</strong> {{ application.job.title }}</p>
-                <p><strong>Company:</strong> {{ application.job.company }}</p>
-                <p><strong>Source:</strong> {{ application.job.source }}</p>
-                <p><strong>Website:</strong> <a href="{{ application.job.website_link }}" target="_blank" class="text-warning">{{ application.job.website_link }}</a></p>
-                <hr>
-                <p><strong>Date Applied:</strong> {{ application.date_applied }}</p>
-                <p><strong>Status:</strong> {{ application.get_status_display }}</p>
-                <p><strong>Cover Letter:</strong></p>
-                <p>{{ application.cover_letter|linebreaks }}</p>
-                <p><strong>Resume:</strong>
-                  {% if application.resume %}
-                    <a href="{{ application.resume.url }}" target="_blank" class="text-warning">View Resume</a>
-                  {% else %}
-                    <span class="text-muted">No resume uploaded</span>
-                  {% endif %}
-                </p>
-                <p><strong>Additional Notes:</strong></p>
-                <p>{{ application.notes|linebreaks }}</p>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              </div>
+      <div class="modal fade" id="appModal{{ application.id }}" tabindex="-1" aria-labelledby="modalLabel{{ application.id }}" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content" style="background-color: #333; color: white;">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalLabel{{ application.id }}">Application Details</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <h4>{{ application.applicant.name }}</h4>
+              <p><strong>Email:</strong> {{ application.applicant.email }}</p>
+              <p><strong>Phone:</strong> {{ application.applicant.phone }}</p>
+              <hr>
+              <p><strong>Job Title:</strong> {{ application.job.title }}</p>
+              <p><strong>Company:</strong> {{ application.job.company }}</p>
+              <p><strong>Source:</strong> {{ application.job.source }}</p>
+              <p><strong>Website:</strong> <a href="{{ application.job.website_link }}" target="_blank" class="text-warning">{{ application.job.website_link }}</a></p>
+              <hr>
+              <p><strong>Date Applied:</strong> {{ application.date_applied }}</p>
+              <p><strong>Status:</strong> {{ application.get_status_display }}</p>
+              <p><strong>Cover Letter:</strong></p>
+              <p>{{ application.cover_letter|linebreaks }}</p>
+              <p><strong>Resume:</strong>
+                {% if application.resume %}
+                  <a href="{{ application.resume.url }}" target="_blank" class="text-warning">View Resume</a>
+                {% else %}
+                  <span class="text-muted">No resume uploaded</span>
+                {% endif %}
+              </p>
+              <p><strong>Additional Notes:</strong></p>
+              <p>{{ application.notes|linebreaks }}</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
           </div>
         </div>
+      </div>
       {% endfor %}
 
     </div>

@@ -1,113 +1,79 @@
-{% extends "base.html" %} {% load static %} {% block content %}
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
 
 <!-- Hero Section -->
-<section
-  class="d-flex align-items-center justify-content-center text-white"
-  style="
-    height: 100vh;
-    background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-  "
->
-  <div class="text-center">
-    <h1 class="display-4 fw-bold mb-3">
-      Welcome to <span class="text-warning">Elevatr</span>
-    </h1>
-    <p class="lead text-secondary mb-4">
-      Your personal job hunt tracker – stay organized, stay focused, land
-      faster.
+<section class="d-flex align-items-center justify-content-center text-white text-center"
+         style="height: 100vh; background-color: #111827; background-image: radial-gradient(circle at top left, rgba(255, 193, 7, 0.1), transparent);">
+  <div class="container">
+    <h1 class="display-4 fw-bold mb-3 text-warning">Your Job Search, Simplified</h1>
+    <p class="lead text-secondary mb-4 px-3">
+      Elevatr helps you track, manage, and streamline your job applications in one intelligent platform.
     </p>
-    <a href="{%url 'register'%}" class="btn btn-warning btn-lg fw-bold px-4 shadow"
-      >Get Started</a
-    >
+    <a href="{% url 'register' %}" class="btn btn-warning btn-lg fw-bold px-5">
+      Get Started
+    </a>
   </div>
 </section>
 
-<!-- What is Elevatr? -->
-<section
-  class="d-flex align-items-center text-white"
-  style="min-height: 100vh; background-color: #1f1f1f"
->
+<!-- What is Elevatr Section -->
+<section class="d-flex align-items-center text-white" style="min-height: 100vh; background-color: #1f1f1f;">
   <div class="container py-5">
     <div class="row align-items-center">
       <div class="col-md-6 mb-4">
-        <img
-          src="{% static 'images/about.svg' %}"
-          alt="About Elevatr"
-          class="img-fluid rounded shadow"
-          style="width: 90%; height: auto"
-        />
+        <img src="{% static 'images/about.svg' %}" alt="What is Elevatr"
+             class="img-fluid rounded shadow" style="width: 90%; height: auto;">
       </div>
       <div class="col-md-6">
         <h2 class="fw-bold mb-3 text-warning">What is Elevatr?</h2>
-        <p class="text-light lead">
-          Elevatr is a modern web app to manage your job applications with ease.
-          Whether you apply through LinkedIn, Indeed, company portals, or
-          referrals — keep everything tracked in one clean, simple space.
+        <p class="text-light">
+          Elevatr is a comprehensive tool that allows job seekers to log every application, update statuses, and gain insights on their journey.
         </p>
-        <ul class="text-light mt-4 ps-1" style="list-style-type: none">
-          <li>
-            <i class="bi bi-check-circle-fill text-warning me-2"></i> Organize
-            all job applications in one place
-          </li>
-          <li>
-            <i class="bi bi-check-circle-fill text-warning me-2"></i> Update
-            progress & track your journey
-          </li>
-          <li>
-            <i class="bi bi-check-circle-fill text-warning me-2"></i> Visual
-            insights and performance metrics
-          </li>
+        <ul class="text-light mt-4 ps-0" style="list-style-type: none;">
+          <li>• Centralized dashboard for all applications</li>
+          <li>• Real-time progress tracking</li>
+          <li>• Privacy-first platform — your data stays yours</li>
         </ul>
+        <p class="text-light mt-3">
+          Built to enhance your strategy and clarity throughout the job search process.
+        </p>
       </div>
     </div>
   </div>
 </section>
 
-<hr class="my-0" style="border: none; border-top: 2px solid #333" />
+<hr class="my-0" style="border: none; border-top: 2px solid #333;" />
 
-<!-- Features Section -->
-<section
-  class="text-white d-flex align-items-center"
-  style="min-height: 100vh; background-color: #121212"
->
-  <div class="container py-5">
-    <h2 class="text-center fw-bold mb-5 display-5 text-warning">
-      Features You'll Love
-    </h2>
-    <div class="row g-5">
-      <div class="col-md-4">
-        <div
-          class="p-4 rounded-4 shadow bg-dark text-center h-100 border border-warning"
-        >
+<!-- Key Features Section -->
+<section class="d-flex align-items-center text-white" style="min-height: 100vh; background-color: #1f1f1f;">
+  <div class="container py-5 text-center">
+    <h2 class="fw-bold mb-5 text-warning">Key Features</h2>
+    <div class="row">
+      <div class="col-md-4 mb-4">
+        <div class="p-4 bg-dark rounded-4 border border-warning h-100">
           <i class="bi bi-pencil-square display-5 text-warning mb-3"></i>
-          <h5 class="fw-semibold mb-3 mt-3">Log Applications</h5>
-          <p class="text-light">
-            Store role, company, platform, apply date — all in a few clicks.
-            Keep your job hunt organized, always.
+          <h5 class="fw-bold mb-2 mt-3">Application Logging</h5>
+          <p class="small text-light">
+            Quickly log details like job title, company, platform, and apply date — all in one streamlined form.
           </p>
         </div>
       </div>
-      <div class="col-md-4">
-        <div
-          class="p-4 rounded-4 shadow bg-dark text-center h-100 border border-warning"
-        >
+      <div class="col-md-4 mb-4">
+        <div class="p-4 bg-dark rounded-4 border border-warning h-100">
           <i class="bi bi-kanban-fill display-5 text-warning mb-3"></i>
-          <h5 class="fw-semibold mb-3 mt-3">Track Progress</h5>
-          <p class="text-light">
-            Easily move jobs from Applied to Interview, Rejected, or Offer. Your
-            journey, clearly visible.
+          <h5 class="fw-bold mb-2 mt-3">Status Management</h5>
+          <p class="small text-light">
+            Easily update application stages — from Applied to Interview, Rejected, or Offer.
           </p>
         </div>
       </div>
-      <div class="col-md-4">
-        <div
-          class="p-4 rounded-4 shadow bg-dark text-center h-100 border border-warning"
-        >
+      <div class="col-md-4 mb-4">
+        <div class="p-4 bg-dark rounded-4 border border-warning h-100">
           <i class="bi bi-bar-chart-line-fill display-5 text-warning mb-3"></i>
-          <h5 class="fw-semibold mb-3 mt-3">Insights & Analytics</h5>
-          <p class="text-light">
-            Understand patterns, optimize your search, and measure success with
-            beautiful charts and stats.
+          <h5 class="fw-bold mb-2 mt-3">Analytics & Insights</h5>
+          <p class="small text-light">
+            Track your progress visually and refine your approach using actionable metrics.
           </p>
         </div>
       </div>
@@ -115,69 +81,39 @@
   </div>
 </section>
 
-<hr class="my-0" style="border: none; border-top: 2px solid #333" />
+<hr class="my-0" style="border: none; border-top: 2px solid #333;" />
 
 <!-- How It Works Section -->
-<section
-  class="text-white d-flex align-items-center"
-  style="min-height: 100vh; background-color: #121212"
->
+<section class="d-flex align-items-center text-white" style="background-color: #1f1f1f;">
   <div class="container py-5">
-    <h2 class="text-center fw-bold mb-5 display-5 text-warning">
-      How It Works
-    </h2>
+    <h2 class="text-center fw-bold mb-5 text-warning">How It Works</h2>
     <div class="row g-4">
       <div class="col-md-3">
-        <div
-          class="p-4 rounded-4 border border-warning text-center bg-dark h-100"
-        >
-          <div class="mb-3">
-            <span class="badge bg-warning fs-4 px-3 py-2">1</span>
-          </div>
-          <h6 class="fw-semibold mt-3">Create Account</h6>
-          <p class="text-light small">
-            Sign up in seconds and unlock your personal job tracking dashboard.
-          </p>
+        <div class="p-4 rounded-4 border border-warning text-center bg-dark h-100">
+          <div class="mb-3"><span class="badge bg-warning fs-4 px-3 py-2">1</span></div>
+          <h6 class="fw-semibold mt-3">Create an Account</h6>
+          <p class="text-light small">Sign up and access your personal job application dashboard.</p>
         </div>
       </div>
       <div class="col-md-3">
-        <div
-          class="p-4 rounded-4 border border-warning text-center bg-dark h-100"
-        >
-          <div class="mb-3">
-            <span class="badge bg-warning fs-4 px-3 py-2">2</span>
-          </div>
-          <h6 class="fw-semibold">Log Jobs</h6>
-          <p class="text-light small">
-            Save jobs from any platform. Include title, company, and source.
-          </p>
+        <div class="p-4 rounded-4 border border-warning text-center bg-dark h-100">
+          <div class="mb-3"><span class="badge bg-warning fs-4 px-3 py-2">2</span></div>
+          <h6 class="fw-semibold">Add Applications</h6>
+          <p class="text-light small">Enter jobs from any platform and track them seamlessly.</p>
         </div>
       </div>
       <div class="col-md-3">
-        <div
-          class="p-4 rounded-4 border border-warning text-center bg-dark h-100"
-        >
-          <div class="mb-3">
-            <span class="badge bg-warning fs-4 px-3 py-2">3</span>
-          </div>
-          <h6 class="fw-semibold">Track Status</h6>
-          <p class="text-light small">
-            Update application status as you hear back. Stay on top of
-            everything.
-          </p>
+        <div class="p-4 rounded-4 border border-warning text-center bg-dark h-100">
+          <div class="mb-3"><span class="badge bg-warning fs-4 px-3 py-2">3</span></div>
+          <h6 class="fw-semibold">Track Progress</h6>
+          <p class="text-light small">Update stages and manage your job pipeline visually.</p>
         </div>
       </div>
       <div class="col-md-3">
-        <div
-          class="p-4 rounded-4 border border-warning text-center bg-dark h-100"
-        >
-          <div class="mb-3">
-            <span class="badge bg-warning fs-4 px-3 py-2">4</span>
-          </div>
-          <h6 class="fw-semibold">Review Stats</h6>
-          <p class="text-light small">
-            Check visual insights and metrics to improve your application game.
-          </p>
+        <div class="p-4 rounded-4 border border-warning text-center bg-dark h-100">
+          <div class="mb-3"><span class="badge bg-warning fs-4 px-3 py-2">4</span></div>
+          <h6 class="fw-semibold">Review & Reflect</h6>
+          <p class="text-light small">Analyze performance and continuously improve your job search strategy.</p>
         </div>
       </div>
     </div>

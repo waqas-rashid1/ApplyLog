@@ -1,16 +1,12 @@
-{% extends "base.html" %} {% load static %} {% block content %}
-<!-- About Us Header Section (Same as Contact Page) -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<!-- Header Section -->
 <section
   class="d-flex align-items-center text-white"
-  style="
-    height: 100vh;
-    background-color: #111827;
-    background-image: radial-gradient(
-      circle at top left,
-      rgba(255, 193, 7, 0.1),
-      transparent
-    );
-  "
+  style="height: 100vh; background-color: #111827; background-image: radial-gradient(circle at top left, rgba(255, 193, 7, 0.1), transparent);"
 >
   <div class="container text-center">
     <h1 class="display-4 fw-bold mb-3 text-warning">About Elevatr</h1>
@@ -20,11 +16,8 @@
   </div>
 </section>
 
-<!-- What is Elevatr? -->
-<section
-  class="d-flex align-items-center text-white"
-  style="min-height: 100vh; background-color: #1f1f1f"
->
+<!-- What is Elevatr Section -->
+<section class="d-flex align-items-center text-white" style="min-height: 100vh; background-color: #1f1f1f;">
   <div class="container py-5">
     <div class="row align-items-center">
       <div class="col-md-6 mb-4">
@@ -32,68 +25,59 @@
           src="{% static 'images/whatsElevatr.svg' %}"
           alt="What is Elevatr"
           class="img-fluid rounded shadow"
-          style="width: 90%; height: auto"
+          style="width: 90%; height: auto;"
         />
       </div>
       <div class="col-md-6">
         <h2 class="fw-bold mb-3 text-warning">What is Elevatr?</h2>
         <p class="text-light">
-          Elevatr is your personal assistant in the job hunt. It lets you track
-          every application — whether it's from LinkedIn, Indeed, Rozee, or
-          anywhere else — and monitor progress like a pro.
+          Elevatr is your personal assistant in the job search journey. It helps you track every application — whether it's from LinkedIn, Indeed, Rozee, or any other platform — and manage your job progress efficiently.
         </p>
-        <ul class="text-light mt-4 ps-0" style="list-style-type: none">
-          <li>📌 Add applications in seconds</li>
-          <li>🎯 See all statuses at a glance</li>
-          <li>📅 Follow up without confusion</li>
-          <li>🔒 100% privacy — your data, your rules</li>
+        <ul class="text-light mt-4 ps-0" style="list-style-type: none;">
+          <li>• Add applications quickly and easily</li>
+          <li>• Monitor statuses at a glance</li>
+          <li>• Stay on top of follow-ups</li>
+          <li>• Your data stays private and secure</li>
         </ul>
         <p class="text-light mt-3">
-          Built to reduce stress, simplify tracking, and boost your chances of
-          landing the dream job.
+          Designed to simplify tracking, reduce stress, and increase your chances of success.
         </p>
       </div>
     </div>
   </div>
 </section>
 
-<hr class="my-0" style="border: none; border-top: 2px solid #333" />
+<hr class="my-0" style="border: none; border-top: 2px solid #333;" />
 
-<!-- Why Choose Elevatr -->
-<section
-  class="d-flex align-items-center text-white"
-  style="min-height: 100vh; background-color: #1f1f1f"
->
+<!-- Why Choose Elevatr Section -->
+<section class="d-flex align-items-center text-white" style="min-height: 100vh; background-color: #1f1f1f;">
   <div class="container py-5 text-center">
     <h2 class="fw-bold mb-5 text-warning">Why Choose Elevatr?</h2>
     <div class="row">
       <div class="col-md-4 mb-4">
         <div class="p-4 bg-dark rounded-4 border border-warning h-100">
           <i class="bi bi-kanban-fill display-5 text-warning mb-3"></i>
-          <h5 class="fw-bold mb-2">Clear Dashboard</h5>
+          <h5 class="fw-bold mb-2 mt-2">Intuitive Dashboard</h5>
           <p class="small text-light">
-            Visualize all applications with color-coded statuses and track your
-            progress.
+            Easily visualize and manage all your applications in one place with color-coded statuses.
           </p>
         </div>
       </div>
       <div class="col-md-4 mb-4">
         <div class="p-4 bg-dark rounded-4 border border-warning h-100">
           <i class="bi bi-check2-square display-5 text-warning mb-3"></i>
-          <h5 class="fw-bold mb-2">Quick Logging</h5>
+          <h5 class="fw-bold mb-2 mt-2">Efficient Logging</h5>
           <p class="small text-light">
-            Log new applications instantly with an intuitive form — no learning
-            curve.
+            Log new applications in seconds with a simple and user-friendly form.
           </p>
         </div>
       </div>
       <div class="col-md-4 mb-4">
         <div class="p-4 bg-dark rounded-4 border border-warning h-100">
-          <i class="bi bi-cloud display-5 text-warning mb-3"></i>
-          <h5 class="fw-bold mb-2">Data Security</h5>
+          <i class="bi bi-shield-lock-fill display-5 text-warning mb-3"></i>
+          <h5 class="fw-bold mb-2 mt-2">Data Privacy</h5>
           <p class="small text-light">
-            Your data is never sold, shared, or analyzed. We take privacy
-            seriously.
+            We prioritize your privacy. Your data is secure and never shared or analyzed.
           </p>
         </div>
       </div>
@@ -101,29 +85,24 @@
   </div>
 </section>
 
-<hr class="my-0" style="border: none; border-top: 2px solid #333" />
+<hr class="my-0" style="border: none; border-top: 2px solid #333;" />
 
 <!-- Our Vision Section -->
-<section
-  class="d-flex align-items-center text-white"
-  style="min-height: 100vh; background-color: #1f1f1f"
->
+<section class="d-flex align-items-center text-white" style="min-height: 100vh; background-color: #1f1f1f;">
   <div class="container py-5">
     <div class="row align-items-center">
       <div class="col-md-6 mb-4">
         <h2 class="fw-bold mb-3 text-warning">Our Vision</h2>
         <p class="text-light">
-          At Elevatr, we believe that the job-seeking process should feel
-          empowering — not overwhelming.
+          We believe the job-seeking process should be empowering, not overwhelming.
         </p>
         <p class="text-light">
-          Our mission is to make job hunting less chaotic and more strategic for
-          students, graduates, and professionals.
+          Our mission is to bring structure and clarity to job hunting for students, recent graduates, and working professionals.
         </p>
-        <ul class="text-light ps-0" style="list-style-type: none">
-          <li>💡 Build confidence through clarity</li>
-          <li>📈 Improve application strategy through reflection</li>
-          <li>🌍 Empower every individual, no matter their background</li>
+        <ul class="text-light ps-0" style="list-style-type: none;">
+          <li>• Build confidence through clarity</li>
+          <li>• Enable strategic reflection and planning</li>
+          <li>• Support career growth across all backgrounds</li>
         </ul>
       </div>
       <div class="col-md-6">
@@ -131,28 +110,26 @@
           src="{% static 'images/vision.svg' %}"
           alt="Our Vision"
           class="img-fluid rounded shadow"
-          style="width: 90%; height: auto"
+          style="width: 90%; height: auto;"
         />
       </div>
     </div>
   </div>
 </section>
 
-<hr class="my-0" style="border: none; border-top: 2px solid #333" />
+<hr class="my-0" style="border: none; border-top: 2px solid #333;" />
 
-<!-- Call to Action -->
-<section
-  class="d-flex align-items-center justify-content-center text-white"
-  style="min-height: 100vh; background-color: #1f1f1f"
->
+<!-- Call to Action Section -->
+<section class="d-flex align-items-center justify-content-center text-white" style="min-height: 100vh; background-color: #1f1f1f;">
   <div class="text-center">
-    <h2 class="fw-bold mb-3 text-warning">Let’s get you organized 🎯</h2>
+    <h2 class="fw-bold mb-3 text-warning">Take Control of Your Job Search</h2>
     <p class="text-light mb-4">
-      Sign up today and turn your job applications into a system that works.
+      Sign up now to streamline your applications and stay organized from start to success.
     </p>
-    <a href="{% url 'register' %}" class="btn btn-warning px-4 py-2 fw-bold"
-      >Start Tracking Now</a
-    >
+    <a href="{% url 'register' %}" class="btn btn-warning px-4 py-2 fw-bold">
+      Get Started
+    </a>
   </div>
 </section>
+
 {% endblock %}
