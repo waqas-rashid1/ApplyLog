@@ -101,33 +101,6 @@
       </div>
     </div>
 
-    <!-- Resume Match Scores -->
-    <div class="row mb-5">
-      <div class="col">
-        <div class="bg-dark p-4 rounded-3 shadow-sm">
-          <h5 class="mb-4">Resume Match Scores <span style="" class="text-danger">*</span></h5>
-          <form id="resumeForm" enctype="multipart/form-data">
-            <input type="file" name="resume" class="form-control mb-3" required accept=".pdf, .doc, .docx" />
-            <button type="submit" class="btn btn-warning">Upload & Match</button>
-          </form>
-
-          <div class="table-responsive mt-4" id="matchTableWrapper" style="display: none;">
-            <table class="table table-dark table-bordered table-hover" id="matchTable">
-              <thead>
-                <tr>
-                  <th>Job Title</th>
-                  <th>Company</th>
-                  <th>Notes</th>
-                  <th>Match Score (%)</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-
   </div>
 </section>
 
@@ -176,40 +149,6 @@
       plugins: {
         legend: { labels: { color: 'white' } }
       }
-    }
-  });
-</script>
-
-<!-- Resume Match Script -->
-<script>
-  document.getElementById("resumeForm").addEventListener("submit", async function (e) {
-    e.preventDefault();
-    const formData = new FormData(this);
-
-    const response = await fetch("/tracker/resume-match/", {
-      method: "POST",
-      body: formData,
-    });
-
-    const data = await response.json();
-    const tableWrapper = document.getElementById("matchTableWrapper");
-    const tbody = document.querySelector("#matchTable tbody");
-    tbody.innerHTML = "";
-
-    if (data.matches) {
-      data.matches.forEach((match) => {
-        tbody.innerHTML += `
-          <tr>
-            <td>${match.title}</td>
-            <td>${match.company}</td>
-            <td>${match.notes}</td>
-            <td><span class="badge bg-info">${match.score}</span></td>
-          </tr>
-        `;
-      });
-      tableWrapper.style.display = "block";
-    } else {
-      alert("Error matching resume");
     }
   });
 </script>

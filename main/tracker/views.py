@@ -607,3 +607,10 @@ def smart_suggestions_all(request):
             continue
 
     return JsonResponse({"suggestions": suggestions})
+
+
+#resume matching view
+@login_required
+def resume_matching(request):
+    #render the resume matching page
+    return render(request, 'resume_match.html')

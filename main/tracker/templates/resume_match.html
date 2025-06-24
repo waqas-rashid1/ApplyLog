@@ -1,0 +1,126 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+<style>
+  .custom-section {
+    background: linear-gradient(135deg, #0f0f0f, #1e1e1e, #2a2a2a);
+    color: white;
+    padding: 100px 0 60px;
+    text-align: center;
+  }
+  .custom-section h1 {
+    color: #ffca2c;
+  }
+  .form-card {
+    background-color: #1f1f1f;
+    border: 1px solid #333;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+  }
+  .form-label {
+    color: #ccc;
+  }
+  .match-score-badge {
+    font-weight: bold;
+    font-size: 0.9rem;
+  }
+</style>
+
+<!-- Header Section -->
+<section
+  class="d-flex align-items-center justify-content-center text-white text-center"
+  style="height: 100vh; background: linear-gradient(135deg, #0f0f0f, #1e1e1e, #2a2a2a);"
+>
+  <div>
+    <h1 class="display-4 fw-bold" style="color: #ffca2c">Resume Match Analyzer</h1>
+    <p class="lead text-light px-2">
+      Upload your resume and instantly see how well it aligns with your wishlisted job opportunities.
+    </p>
+  </div>
+</section>
+
+<!-- Resume Match Form Section -->
+<section class="py-5" style="background-color: #121212">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="form-card">
+          <h4 class="text-warning mb-4">Resume Match Score <small style="font-size: 15px; color:grey">(will be compared with wishlisted jobs)</small> </h4>
+          <form id="resumeForm" enctype="multipart/form-data">
+            <div class="mb-3">
+              <label for="resume" class="form-label">Upload Resume <span class="text-danger">*</span> </label>
+              <input
+                type="file"
+                name="resume"
+                class="form-control"
+                id="resume"
+                required
+                accept=".pdf, .doc, .docx"
+              />
+            </div>
+            <button type="submit" class="btn btn-warning px-4">
+              Upload & Match
+            </button>
+          </form>
+
+          <div id="matchTableWrapper" class="mt-5" style="display: none">
+            <h5 class="text-light mb-3">Top Matches</h5>
+            <div class="table-responsive">
+              <table
+                class="table table-dark table-bordered table-striped align-middle"
+                id="matchTable"
+              >
+                <thead class="table-secondary text-dark">
+                  <tr>
+                    <th>Job Title</th>
+                    <th>Company</th>
+                    <th>Notes</th>
+                    <th>Match Score</th>
+                  </tr>
+                </thead>
+                <tbody class="text-light"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Resume Match Script -->
+<script>
+  document
+    .getElementById("resumeForm")
+    .addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+
+      const response = await fetch("/tracker/resume-match/", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+      const tableWrapper = document.getElementById("matchTableWrapper");
+      const tbody = document.querySelector("#matchTable tbody");
+      tbody.innerHTML = "";
+
+      if (data.matches) {
+        data.matches.forEach((match) => {
+          tbody.innerHTML += `
+          <tr>
+            <td>${match.title}</td>
+            <td>${match.company}</td>
+            <td>${match.notes}</td>
+            <td><span class="badge bg-info">${match.score}</span></td>
+          </tr>
+        `;
+        });
+        tableWrapper.style.display = "block";
+      } else {
+        alert("Error matching resume");
+      }
+    });
+</script>
+
+{%endblock%}

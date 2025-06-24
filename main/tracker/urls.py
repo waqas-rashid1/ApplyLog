@@ -19,4 +19,5 @@ urlpatterns = [
     path("jobs/", views.live_job_list, name="live_job_list"),
     path('live-jobs/', views.live_job_list_view, name='live_job_list'),
     path('smart-suggestions-all/', views.smart_suggestions_all, name='smart_suggestions_all'),
+    path('resume-matching/', views.resume_matching, name='resume_matching'),
 ] 
