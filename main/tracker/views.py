@@ -522,8 +522,20 @@ RAPIDAPI_KEY = "ac0fa29d81mshbb893cbbbbf1eb5p15b4abjsn486de655cb57"
 @require_GET
 def live_job_list(request):
     title = request.GET.get("title", "").strip()
+    location = request.GET.get("location", "").strip()
+    job_type = request.GET.get("type", "").strip()
+
     if not title:
         return JsonResponse({"error": "Please provide a job title"}, status=400)
+
+    # Build query string
+    query_parts = [title]
+    if location:
+        query_parts.append(location)
+    if job_type:
+        query_parts.append(job_type)
+
+    query = " ".join(query_parts)
 
     try:
         url = "https://jsearch.p.rapidapi.com/search"
@@ -532,21 +544,14 @@ def live_job_list(request):
             "X-RapidAPI-Host": "jsearch.p.rapidapi.com"
         }
         params = {
-            "query": title,
+            "query": query,
             "page": "1",
             "num_pages": "1"
         }
 
         response = requests.get(url, headers=headers, params=params, timeout=10)
-
-        logger.info(f"Status Code: {response.status_code}")
-        logger.debug(f"Raw response: {response.text[:300]}")
-
         if response.status_code != 200:
-            return JsonResponse({
-                "error": "API request failed",
-                "status": response.status_code
-            }, status=response.status_code)
+            return JsonResponse({"error": "API request failed"}, status=response.status_code)
 
         data = response.json()
         jobs = []
@@ -555,17 +560,15 @@ def live_job_list(request):
             jobs.append({
                 "title": job.get("job_title", "N/A"),
                 "company": job.get("employer_name", "N/A"),
-                "location": job.get("job_city", "Remote"),
+                "location": job.get("job_city") or job.get("job_country", "Remote"),
+                "type": job.get("job_offer_type", "N/A") or job.get("job_is_remote", "Remote"),
                 "link": job.get("job_apply_link", "#")
             })
 
         return JsonResponse({"results": jobs})
     except Exception as e:
         logger.error(f"Job fetch error: {str(e)}", exc_info=True)
-        return JsonResponse({
-            "error": "Job API failed",
-            "details": str(e)
-        }, status=500)
+        return JsonResponse({"error": "Job API failed", "details": str(e)}, status=500)
 
 def live_job_list_view(request):
     return render(request, 'jobs_list.html')
