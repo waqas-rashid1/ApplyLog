@@ -115,8 +115,3 @@ Created by [Waqas Rashid](https://github.com/WaqasAly)
 For queries, reach out via [LinkedIn](https://www.linkedin.com/in/waqas-rashid1/)
 
 ---
-
-```
-
-Let me know if you'd like to add a deployment guide (like for cPanel), contribution guidelines, or screenshots section.
-```
