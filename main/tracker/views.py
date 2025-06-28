@@ -21,12 +21,23 @@ from .utils import fetch_job_details, detect_job_source
 
 def add_application(request):
     form = ApplicationForm()
+    applicant_data = None
+
+    # Fetch existing applicant data for the logged-in user (if available)
+    if request.user.is_authenticated:
+        applicant_data = Applicant.objects.filter(user=request.user).first()
+
     if request.method == 'POST':
         form = ApplicationForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('application_success')  # Define this view/template
-    return render(request, 'add_application.html', {'form': form, 'today_date': date.today().isoformat()})
+            return redirect('application_success')  # Or wherever you want to redirect after success
+
+    return render(request, 'add_application.html', {
+        'form': form,
+        'today_date': date.today().isoformat(),
+        'applicant': applicant_data,
+    })
 
 @login_required
 def application_history(request):

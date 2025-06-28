@@ -47,7 +47,7 @@
       <form method="POST" enctype="multipart/form-data" action="{% url 'submit_application' %}">
         {% csrf_token %}
 
-        <!-- Applicant Name Field -->
+        <!-- Applicant Name -->
         <div class="row mb-3">
           <div class="col-md-4 d-flex align-items-center">
             <label for="id_applicant_name" class="form-label text-white fw-semibold">
@@ -55,11 +55,14 @@
             </label>
           </div>
           <div class="col-md-8">
-            <input type="text" name="applicant_name" id="id_applicant_name" class="form-control" placeholder="Enter your full name" value="{{ form.applicant_name.value }}" style="background-color: #444; color: white;" required>
+            <input type="text" name="applicant_name" id="id_applicant_name" class="form-control"
+              placeholder="Enter your full name"
+              value="{% if form.applicant_name.value %}{{ form.applicant_name.value }}{% elif applicant %}{{ applicant.name }}{% endif %}"
+              style="background-color: #444; color: white;" required>
           </div>
         </div>
 
-        <!-- Email Field -->
+        <!-- Email -->
         <div class="row mb-3">
           <div class="col-md-4 d-flex align-items-center">
             <label for="id_email" class="form-label text-white fw-semibold">
@@ -67,11 +70,14 @@
             </label>
           </div>
           <div class="col-md-8">
-            <input type="email" name="email" id="id_email" class="form-control" placeholder="Enter your email" value="{{ form.email.value }}" style="background-color: #444; color: white;" required>
+            <input type="email" name="email" id="id_email" class="form-control"
+              placeholder="Enter your email"
+              value="{% if form.email.value %}{{ form.email.value }}{% elif applicant %}{{ applicant.email }}{% endif %}"
+              style="background-color: #444; color: white;" required>
           </div>
         </div>
 
-        <!-- Phone Field -->
+        <!-- Phone -->
         <div class="row mb-3">
           <div class="col-md-4 d-flex align-items-center">
             <label for="id_phone" class="form-label text-white fw-semibold">
@@ -79,11 +85,14 @@
             </label>
           </div>
           <div class="col-md-8">
-            <input type="text" name="phone" id="id_phone" class="form-control" placeholder="Enter your phone number" value="{{ form.phone.value }}" style="background-color: #444; color: white;" required>
+            <input type="text" name="phone" id="id_phone" class="form-control"
+              placeholder="Enter your phone number"
+              value="{% if form.phone.value %}{{ form.phone.value }}{% elif applicant %}{{ applicant.phone }}{% endif %}"
+              style="background-color: #444; color: white;" required>
           </div>
         </div>
 
-        <!-- Position Applied Field -->
+        <!-- Position Applied -->
         <div class="row mb-3">
           <div class="col-md-4 d-flex align-items-center">
             <label for="id_position_applied" class="form-label text-white fw-semibold">
@@ -91,11 +100,14 @@
             </label>
           </div>
           <div class="col-md-8">
-            <input type="text" name="position_applied" id="id_position_applied" class="form-control" placeholder="Position you're applying for" value="{{ form.position_applied.value }}" style="background-color: #444; color: white;" required>
+            <input type="text" name="position_applied" id="id_position_applied" class="form-control"
+              placeholder="Position you're applying for"
+              value="{{ form.position_applied.value }}"
+              style="background-color: #444; color: white;" required>
           </div>
         </div>
 
-        <!-- Company Name Field -->
+        <!-- Company Name -->
         <div class="row mb-3">
           <div class="col-md-4 d-flex align-items-center">
             <label for="id_company_name" class="form-label text-white fw-semibold">
@@ -103,31 +115,40 @@
             </label>
           </div>
           <div class="col-md-8">
-            <input type="text" name="company_name" id="id_company_name" class="form-control" placeholder="Enter the company's name" value="{{ form.company_name.value }}" style="background-color: #444; color: white;" required>
+            <input type="text" name="company_name" id="id_company_name" class="form-control"
+              placeholder="Enter the company's name"
+              value="{{ form.company_name.value }}"
+              style="background-color: #444; color: white;" required>
           </div>
         </div>
 
-        <!-- Website Link Field -->
+        <!-- Website Link -->
         <div class="row mb-3">
           <div class="col-md-4 d-flex align-items-center">
             <label for="id_website_link" class="form-label text-white fw-semibold">Website Link</label>
           </div>
           <div class="col-md-8">
-            <input type="url" name="website_link" id="id_website_link" class="form-control" placeholder="Enter the job posting URL" value="{{ form.website_link.value }}" style="background-color: #444; color: white;">
+            <input type="url" name="website_link" id="id_website_link" class="form-control"
+              placeholder="Enter the job posting URL"
+              value="{{ form.website_link.value }}"
+              style="background-color: #444; color: white;">
           </div>
         </div>
 
-        <!-- Source Field -->
+        <!-- Job Source -->
         <div class="row mb-3">
           <div class="col-md-4 d-flex align-items-center">
             <label for="id_source" class="form-label text-white fw-semibold">Job Source</label>
           </div>
           <div class="col-md-8">
-            <input type="text" name="source" id="id_source" class="form-control" placeholder="e.g., LinkedIn, Indeed" value="{{ form.source.value }}" style="background-color: #444; color: white;">
+            <input type="text" name="source" id="id_source" class="form-control"
+              placeholder="e.g., LinkedIn, Indeed"
+              value="{{ form.source.value }}"
+              style="background-color: #444; color: white;">
           </div>
         </div>
 
-        <!-- Application Date Field -->
+        <!-- Application Date -->
         <div class="row mb-3">
           <div class="col-md-4 d-flex align-items-center">
             <label for="id_application_date" class="form-label text-white fw-semibold">
@@ -135,18 +156,20 @@
             </label>
           </div>
           <div class="col-md-8">
-            <input type="date" name="date_applied" id="id_application_date" class="form-control" style="background-color: #444; color: white;" value="{{ form.application_date.value|default:today_date }}" required> 
+            <input type="date" name="date_applied" id="id_application_date" class="form-control"
+              value="{{ form.application_date.value|default:today_date }}"
+              style="background-color: #444; color: white;" required>
           </div>
         </div>
 
-        <!-- Resume Field -->
+        <!-- Resume -->
         <div class="row mb-3">
           <div class="col-md-4 d-flex align-items-center">
             <label for="id_resume" class="form-label text-white fw-semibold">Resume</label>
           </div>
           <div class="col-md-8">
-            <input type="file" name="resume" id="id_resume" class="form-control" style="background-color: #444; color: white;">
-
+            <input type="file" name="resume" id="id_resume" class="form-control"
+              style="background-color: #444; color: white;">
             {% if form.resume.errors %}
               <div class="text-danger small mt-1">
                 {{ form.resume.errors.0 }}
@@ -155,7 +178,7 @@
           </div>
         </div>
 
-        <!-- Status Field -->
+        <!-- Status -->
         <div class="row mb-3">
           <div class="col-md-4 d-flex align-items-center">
             <label for="id_status" class="form-label text-white fw-semibold">
@@ -163,9 +186,11 @@
             </label>
           </div>
           <div class="col-md-8">
-            <select name="status" id="id_status" class="form-select" style="background-color: #444; color: white; border: 1px solid #666;" required>
+            <select name="status" id="id_status" class="form-select"
+              style="background-color: #444; color: white; border: 1px solid #666;" required>
               {% for value, label in form.status.field.choices %}
-                <option value="{{ value }}" {% if form.status.value == value %}selected{% endif %} style="background-color: #444; color: white;">
+                <option value="{{ value }}" {% if form.status.value == value %}selected{% endif %}
+                  style="background-color: #444; color: white;">
                   {{ label }}
                 </option>
               {% endfor %}
@@ -173,23 +198,27 @@
           </div>
         </div>
 
-        <!-- Cover Letter Field -->
+        <!-- Cover Letter -->
         <div class="row mb-3">
           <div class="col-md-4 d-flex align-items-center">
             <label for="id_cover_letter" class="form-label text-white fw-semibold">Cover Letter</label>
           </div>
           <div class="col-md-8">
-            <textarea name="cover_letter" id="id_cover_letter" class="form-control" rows="4" placeholder="Enter your cover letter" style="background-color: #444; color: white;">{{ form.cover_letter.value }}</textarea>
+            <textarea name="cover_letter" id="id_cover_letter" class="form-control" rows="4"
+              placeholder="Enter your cover letter"
+              style="background-color: #444; color: white;">{{ form.cover_letter.value }}</textarea>
           </div>
         </div>
 
-        <!-- Additional Notes Field -->
+        <!-- Additional Notes -->
         <div class="row mb-4">
           <div class="col-md-4 d-flex align-items-center">
             <label for="id_notes" class="form-label text-white fw-semibold">Additional Notes</label>
           </div>
           <div class="col-md-8">
-            <textarea name="notes" id="id_notes" class="form-control" rows="4" placeholder="Enter any additional notes" style="background-color: #444; color: white;">{{ form.notes.value }}</textarea>
+            <textarea name="notes" id="id_notes" class="form-control" rows="4"
+              placeholder="Enter any additional notes"
+              style="background-color: #444; color: white;">{{ form.notes.value }}</textarea>
           </div>
         </div>
 
@@ -201,6 +230,7 @@
     </div>
   </div>
 </section>
+
 
 {% endblock %}
 
