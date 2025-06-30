@@ -1,0 +1,222 @@
+name: Deploy Elevatr to Droplet
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    # Centralized configuration for easy management
+    env:
+      # Secrets (pulled from GitHub secrets)
+      DROPLET_HOST: ${{ secrets.DROPLET_HOST }}
+      DROPLET_USER: ${{ secrets.DROPLET_USER }}
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+      ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+
+      # Non-secret configuration
+      DOMAIN: elevatr.codehub.pk
+      PROJECT_DIR: /opt/Elevatr
+      DB_NAME: elevatr
+
+    steps:
+    - name: 1. Install System Dependencies
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ env.DROPLET_HOST }}
+        username: ${{ env.DROPLET_USER }}
+        key: ${{ env.SSH_PRIVATE_KEY }}
+        script: |
+          set -e
+          echo "[1/9] Updating packages and installing system dependencies..."
+          apt-get update
+          apt-get install -y python3-pip python3-venv nginx mysql-server git python3-certbot-nginx
+
+    - name: 2. Configure MySQL Database
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ env.DROPLET_HOST }}
+        username: ${{ env.DROPLET_USER }}
+        key: ${{ env.SSH_PRIVATE_KEY }}
+        script: |
+          set -e
+          echo "[2/9] Starting and configuring MySQL..."
+          systemctl enable --now mysql
+          mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '${{ env.MYSQL_ROOT_PASSWORD }}'; FLUSH PRIVILEGES;"
+          
+          echo "[2/9] Creating database '${{ env.DB_NAME }}'..."
+          mysql -u root -p"${{ env.MYSQL_ROOT_PASSWORD }}" -e "CREATE DATABASE IF NOT EXISTS ${{ env.DB_NAME }};"
+
+    - name: 3. Clone or Update Application Repository
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ env.DROPLET_HOST }}
+        username: ${{ env.DROPLET_USER }}
+        key: ${{ env.SSH_PRIVATE_KEY }}
+        script: |
+          set -e
+          echo "[3/9] Cloning or updating the application repository..."
+          if [ ! -d "${{ env.PROJECT_DIR }}/.git" ]; then
+            git clone https://github.com/waqas-rashid1/Elevatr.git ${{ env.PROJECT_DIR }}
+            echo "Repository cloned."
+          else
+            cd ${{ env.PROJECT_DIR }} && git pull
+            echo "Repository updated."
+          fi
+
+    - name: 4. Set up Python Virtual Environment
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ env.DROPLET_HOST }}
+        username: ${{ env.DROPLET_USER }}
+        key: ${{ env.SSH_PRIVATE_KEY }}
+        script: |
+          set -e
+          echo "[4/9] Setting up Python virtual environment..."
+          cd ${{ env.PROJECT_DIR }}
+          python3 -m venv env
+
+          echo "[4/9] Installing Python packages..."
+          source env/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install gunicorn mysqlclient  # Using correct driver for MySQL
+
+    - name: 5. Configure Django Settings
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ env.DROPLET_HOST }}
+        username: ${{ env.DROPLET_USER }}
+        key: ${{ env.SSH_PRIVATE_KEY }}
+        script: |
+          set -e
+          echo "[5/9] Updating Django settings.py for production..."
+          SETTINGS_FILE="${{ env.PROJECT_DIR }}/main/main/settings.py"
+
+          # Replace DATABASES block to use MySQL root user
+          sed -i "/^DATABASES = {/,/^}/c\
+          DATABASES = {\\
+              'default': {\\
+                  'ENGINE': 'django.db.backends.mysql',\\
+                  'NAME': '${{ env.DB_NAME }}',\\
+                  'USER': 'root',\\
+                  'PASSWORD': '${{ env.MYSQL_ROOT_PASSWORD }}',\\
+                  'HOST': '127.0.0.1',\\
+                  'PORT': '3306',\\
+              }\\
+          }" $SETTINGS_FILE
+
+          # Configure other production settings
+          sed -i "s|^DEBUG = True|DEBUG = False|" $SETTINGS_FILE
+          sed -i "s|ALLOWED_HOSTS = \[\]|ALLOWED_HOSTS = \['${{ env.DOMAIN }}', 'www.${{ env.DOMAIN }}'\]|" $SETTINGS_FILE
+          sed -i "s|^STATICFILES_DIRS = .*|# STATICFILES_DIRS is disabled in production|" $SETTINGS_FILE
+          sed -i "s|^# STATIC_ROOT.*|STATIC_ROOT = BASE_DIR / 'static'|" $SETTINGS_FILE
+
+    - name: 6. Run Django Management Commands
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ env.DROPLET_HOST }}
+        username: ${{ env.DROPLET_USER }}
+        key: ${{ env.SSH_PRIVATE_KEY }}
+        script: |
+          set -e
+          echo "[6/9] Running Django migrations..."
+          cd ${{ env.PROJECT_DIR }}/main
+          ../env/bin/python manage.py migrate
+
+          echo "[6/9] Collecting static files..."
+          ../env/bin/python manage.py collectstatic --noinput
+
+    - name: 7. Create and Start Gunicorn Service
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ env.DROPLET_HOST }}
+        username: ${{ env.DROPLET_USER }}
+        key: ${{ env.SSH_PRIVATE_KEY }}
+        script: |
+          set -e
+          echo "[7/9] Creating Gunicorn systemd service..."
+          tee /etc/systemd/system/gunicorn.service > /dev/null <<EOL
+          [Unit]
+          Description=Gunicorn daemon for Elevatr
+          After=network.target
+
+          [Service]
+          User=root
+          Group=www-data
+          WorkingDirectory=${{ env.PROJECT_DIR }}/main
+          ExecStart=${{ env.PROJECT_DIR }}/env/bin/gunicorn \
+            --access-logfile - \
+            --workers 3 \
+            --bind unix:/run/gunicorn.sock \
+            main.wsgi:application
+
+          [Install]
+          WantedBy=multi-user.target
+          EOL
+          
+          echo "[7/9] Starting and enabling Gunicorn..."
+          systemctl daemon-reload
+          systemctl restart gunicorn
+          systemctl enable gunicorn
+
+    - name: 8. Configure Nginx and Firewall
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ env.DROPLET_HOST }}
+        username: ${{ env.DROPLET_USER }}
+        key: ${{ env.SSH_PRIVATE_KEY }}
+        script: |
+          set -e
+          echo "[8/9] Creating Nginx server block for ${{ env.DOMAIN }}..."
+          tee /etc/nginx/sites-available/${{ env.DOMAIN }} > /dev/null <<EOL
+          server {
+              listen 80;
+              server_name ${{ env.DOMAIN }} www.${{ env.DOMAIN }};
+
+              location = /favicon.ico { access_log off; log_not_found off; }
+              
+              location /static/ {
+                  root ${{ env.PROJECT_DIR }}/main;
+              }
+
+              location /media/ {
+                  root ${{ env.PROJECT_DIR }}/main;
+              }
+
+              location / {
+                  include proxy_params;
+                  proxy_pass http://unix:/run/gunicorn.sock;
+              }
+          }
+          EOL
+
+          echo "[8/9] Enabling Nginx site and removing default..."
+          ln -sf /etc/nginx/sites-available/${{ env.DOMAIN }} /etc/nginx/sites-enabled/
+          rm -f /etc/nginx/sites-enabled/default
+          
+          echo "[8/9] Configuring firewall (UFW)..."
+          ufw allow 'Nginx Full'
+          ufw allow OpenSSH
+          ufw --force enable
+          
+          echo "[8/9] Testing and restarting Nginx..."
+          nginx -t
+          systemctl restart nginx
+
+    - name: 9. Obtain SSL Certificate with Certbot
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ env.DROPLET_HOST }}
+        username: ${{ env.DROPLET_USER }}
+        key: ${{ env.SSH_PRIVATE_KEY }}
+        script: |
+          set -e
+          echo "[9/9] Obtaining SSL certificate with Certbot..."
+          certbot --nginx --non-interactive --agree-tos -m ${{ env.ADMIN_EMAIL }} -d ${{ env.DOMAIN }} -d www.${{ env.DOMAIN }}
+          echo " "
+          echo "---"
+          echo "Deployment complete! Your site should be live at https://${{ env.DOMAIN }}"
+          echo "---"
