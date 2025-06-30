@@ -23,7 +23,7 @@ jobs:
 
     steps:
     - name: 1. Install System Dependencies
-      uses: appleboy/ssh-action@v1.0.3
+      uses: appleboy/ssh-action@v1.2.2
       with:
         host: ${{ env.DROPLET_HOST }}
         username: ${{ env.DROPLET_USER }}
@@ -35,7 +35,7 @@ jobs:
           apt-get install -y python3-pip python3-venv nginx mysql-server git python3-certbot-nginx
 
     - name: 2. Configure MySQL Database
-      uses: appleboy/ssh-action@v1.0.3
+      uses: appleboy/ssh-action@v1.2.2
       with:
         host: ${{ env.DROPLET_HOST }}
         username: ${{ env.DROPLET_USER }}
@@ -50,7 +50,7 @@ jobs:
           mysql -u root -p"${{ env.MYSQL_ROOT_PASSWORD }}" -e "CREATE DATABASE IF NOT EXISTS ${{ env.DB_NAME }};"
 
     - name: 3. Clone or Update Application Repository
-      uses: appleboy/ssh-action@v1.0.3
+      uses: appleboy/ssh-action@v1.2.2
       with:
         host: ${{ env.DROPLET_HOST }}
         username: ${{ env.DROPLET_USER }}
@@ -67,7 +67,7 @@ jobs:
           fi
 
     - name: 4. Set up Python Virtual Environment
-      uses: appleboy/ssh-action@v1.0.3
+      uses: appleboy/ssh-action@v1.2.2
       with:
         host: ${{ env.DROPLET_HOST }}
         username: ${{ env.DROPLET_USER }}
@@ -85,7 +85,7 @@ jobs:
           pip install gunicorn mysqlclient  # Using correct driver for MySQL
 
     - name: 5. Configure Django Settings
-      uses: appleboy/ssh-action@v1.0.3
+      uses: appleboy/ssh-action@v1.2.2
       with:
         host: ${{ env.DROPLET_HOST }}
         username: ${{ env.DROPLET_USER }}
@@ -115,7 +115,7 @@ jobs:
           sed -i "s|^# STATIC_ROOT.*|STATIC_ROOT = BASE_DIR / 'static'|" $SETTINGS_FILE
 
     - name: 6. Run Django Management Commands
-      uses: appleboy/ssh-action@v1.0.3
+      uses: appleboy/ssh-action@v1.2.2
       with:
         host: ${{ env.DROPLET_HOST }}
         username: ${{ env.DROPLET_USER }}
@@ -130,7 +130,7 @@ jobs:
           ../env/bin/python manage.py collectstatic --noinput
 
     - name: 7. Create and Start Gunicorn Service
-      uses: appleboy/ssh-action@v1.0.3
+      uses: appleboy/ssh-action@v1.2.2
       with:
         host: ${{ env.DROPLET_HOST }}
         username: ${{ env.DROPLET_USER }}
@@ -163,7 +163,7 @@ jobs:
           systemctl enable gunicorn
 
     - name: 8. Configure Nginx and Firewall
-      uses: appleboy/ssh-action@v1.0.3
+      uses: appleboy/ssh-action@v1.2.2
       with:
         host: ${{ env.DROPLET_HOST }}
         username: ${{ env.DROPLET_USER }}
@@ -207,7 +207,7 @@ jobs:
           systemctl restart nginx
 
     - name: 9. Obtain SSL Certificate with Certbot
-      uses: appleboy/ssh-action@v1.0.3
+      uses: appleboy/ssh-action@v1.2.2
       with:
         host: ${{ env.DROPLET_HOST }}
         username: ${{ env.DROPLET_USER }}
