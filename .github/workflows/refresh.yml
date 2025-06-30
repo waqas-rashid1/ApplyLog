@@ -1,0 +1,54 @@
+name: Continuous Deployment to Droplet
+
+# This workflow runs on every push to the 'main' branch
+on:
+  push:
+    branches:
+      - main
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    
+    env:
+      DROPLET_HOST: ${{ secrets.DROPLET_HOST }}
+      DROPLET_USER: ${{ secrets.DROPLET_USER }}
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      PROJECT_DIR: /opt/Elevatr
+
+    steps:
+    - name: Update Application on Droplet
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ env.DROPLET_HOST }}
+        username: ${{ env.DROPLET_USER }}
+        key: ${{ env.SSH_PRIVATE_KEY }}
+        script: |
+          # Exit immediately if a command exits with a non-zero status.
+          set -e
+
+          echo "1. Navigating to project directory..."
+          cd ${{ env.PROJECT_DIR }}
+
+          echo "2. Pulling latest changes from the 'main' branch..."
+          git pull origin main
+
+          echo "3. Installing/updating Python dependencies..."
+          # Use the virtual environment's pip
+          env/bin/pip install --no-cache-dir -r requirements.txt
+
+          echo "4. Running Django database migrations..."
+          # Use the virtual environment's python
+          env/bin/python main/manage.py migrate --noinput
+
+          echo "5. Collecting static files..."
+          env/bin/python main/manage.py collectstatic --noinput
+
+          echo "6. Restarting Gunicorn to apply changes..."
+          systemctl restart gunicorn
+
+          echo "7. Checking Gunicorn status..."
+          systemctl status gunicorn
+
+          echo "----"
+          echo "Update deployed successfully!"
+          echo "----"
