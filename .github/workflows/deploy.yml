@@ -82,7 +82,7 @@ jobs:
           source env/bin/activate
           pip install --upgrade pip
           pip install -r requirements.txt
-          pip install gunicorn pymysql
+          pip install gunicorn pymysql sentence-transformers
 
     - name: 5. Configure Django Settings
       uses: appleboy/ssh-action@v1.2.2
