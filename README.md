@@ -144,8 +144,6 @@ Built with ❤️ by [Waqas Rashid](https://www.linkedin.com/in/waqas-rashid1)
 For queries or collaborations:
 LinkedIn → [waqas-rashid1](https://www.linkedin.com/in/waqas-rashid1)
 
-Got it! Here's a dedicated **Tribute** section you can add to the bottom of your README to acknowledge Affan Ch.'s contributions to the CI/CD and deployment workflow:
-
 ---
 
 ## 🙏 Special Thanks
