@@ -49,8 +49,8 @@ From saving job opportunities to tracking application statuses, Elevatr helps us
 
 ```bash
 # Clone the repository
-git clone https://github.com/waqas-rashid1/applylog.git
-cd applylog
+git clone https://github.com/waqas-rashid1/Elevatr.git
+cd Elevatr
 
 # Set up virtual environment
 python -m venv env
@@ -64,9 +64,6 @@ pip install -r requirements.txt
 
 # Run migrations
 python manage.py migrate
-
-# Load initial data if needed
-python manage.py loaddata data_backup.json  # Optional
 
 # Collect static files
 python manage.py collectstatic
@@ -84,18 +81,18 @@ python manage.py runserver
 Currently live at: [https://elevatr.codehub.pk/](https://elevatr.codehub.pk/)
 
 ### Supported Deployment Options:
-✅ VPS (Ubuntu with Apache/Nginx + Gunicorn)
+✅ VPS (Ubuntu with Nginx + Gunicorn)
 
 ✅ MySQL Production Database
 
-✅ GitHub → VPS CI/CD Pipeline (Webhook or GitHub Actions-based deployment flow)
+✅ GitHub → VPS CI/CD Pipeline (GitHub Actions-based deployment flow)
 
 ✅ Google Analytics Integrated
 
 ---
 
 ## ⚙️ CI/CD Workflow
-Latest production deployments are auto-triggered from GitHub → VPS using Webhooks.
+Latest production deployments are auto-triggered from GitHub → VPS using GitHub Actions.
 Every push to the main branch auto-updates the live site.
 
 ✅ Folder Structure
@@ -146,3 +143,12 @@ Distributed under the MIT License. See LICENSE for details.
 Built with ❤️ by [Waqas Rashid](https://www.linkedin.com/in/waqas-rashid1)
 For queries or collaborations:
 LinkedIn → [waqas-rashid1](https://www.linkedin.com/in/waqas-rashid1)
+
+---
+
+## 🙏 Special Thanks
+
+A huge shoutout to **[Affan Ch.](https://www.linkedin.com/in/affan-ch)** ([GitHub](https://github.com/affan-ch)) for setting up and maintaining the **CI/CD pipeline** and **automated deployment to the DigitalOcean droplet**.
+
+---
+
